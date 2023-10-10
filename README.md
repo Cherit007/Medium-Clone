@@ -1,1 +1,1 @@
-# MindScribe
+# MindScribe app
