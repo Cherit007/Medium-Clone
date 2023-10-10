@@ -5,6 +5,9 @@ import Link from "next/link";
 import React from "react";
 
 function ArticleCard() {
+  const handleClick = () => {
+    console.log("Article clicked");
+  }
   return (
     <div>
       <div className="flex mt-10 items-center space-x-2  text-sm">

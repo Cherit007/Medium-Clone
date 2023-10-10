@@ -17,7 +17,7 @@ function Navbar() {
       <div className="flex ml-8 space-x-4 items-center">
         <Image src={"/logo.png"} alt="logo" width={40} height={40} />
         <div className="bg-[#F9F9F9] flex h-[40px] items-center rounded-md space-x-5">
-          <Search className="w-6 h-6 ml-2 text-[#6B6B6B]"/>
+          <Search className="w-6 h-6 ml-2 text-[#6B6B6B]" />
           <input
             type="text"
             placeholder="Search MindScribe"
@@ -27,7 +27,7 @@ function Navbar() {
       </div>
       <div className="hidden xs:flex items-center justify-end mr-5 flex-1 gap-5">
         <div className="flex text-[#6B6B6B] space-x-2">
-          <PenSquare  className="w-6 h-6 text-[#6B6B6B]"/> 
+          <PenSquare className="w-6 h-6 text-[#6B6B6B]" />
           <span>Write</span>
         </div>
         <Bell className="w-6 h-6 text-[#6B6B6B]" />
