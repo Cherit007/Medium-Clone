@@ -26,12 +26,12 @@ index_name = 'article_index'  # Choose a suitable index name
 # es.indices.create(index=index_name, ignore=400)
 # es.indices.put_mapping(index=index_name, body=mapping)
 
-# def index_product(article_id, article_name):
-#     document = {
-#         'article_id': article_id,
-#         'article_name': article_name
-#     }
-#     es.index(index=index_name, body=document, id=article_id)
+def index_product(article_id, article_name):
+    document = {
+        'article_id': article_id,
+        'article_name': article_name
+    }
+    es.index(index=index_name, body=document, id=article_id)
 
 articles = [
     "Introduction to Python Programming",
@@ -102,11 +102,20 @@ def search():
     return json_data
 
 
-# product_dict = pickle.load(open('product_dict.pkl','rb'))
-# df=pd.DataFrame(product_dict)
-# df.reset_index(inplace=True)
-# for i in range(len(df)):
-#   index_product(df["product_id"][i],df["products"][i])
+@app.route('/add-article-elastic-search',methods=["POST"])
+def add():
+   
+    req=request.get_json()
+    title=req["title"]
+    article_id=req["article_id"]
+    try:
+        index_product(article_id, title)
+        return "success"
+    except :
+        return "error in adding title to elastic search"
+    
+    
+
 
 
 if __name__ == "__main__":
