@@ -1,6 +1,8 @@
-import Image from 'next/image';
-import logo from '../../public/logo.png';
-import { Bell } from 'lucide-react';
+import Image from "next/image";
+import logo from "../../public/logo.png";
+import { Bell } from "lucide-react";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 const Header = () => {
   const styles = {
@@ -16,16 +18,19 @@ const Header = () => {
     <div className={styles.wrapper}>
       <div className={styles.content}>
         <div className={styles.logoContainer}>
-          <Image 
-            className= {styles.logo}
+          <Image
+            className={styles.logo}
             src={logo}
             height={40}
-            width={200}
+            width={40}
             alt="logo"
-            />
+          />
         </div>
         <div className={styles.bannerNav}>
-          <div>Sign In</div>
+          <Link href="/sign-in">
+            {" "}
+            <Button variant="default">Sign in/Register</Button>
+          </Link>
           <div>Membership</div>
           <div>
             <Bell />
@@ -34,7 +39,7 @@ const Header = () => {
         </div>
       </div>
     </div>
-  )
-}
-  
-export default Header
+  );
+};
+
+export default Header;

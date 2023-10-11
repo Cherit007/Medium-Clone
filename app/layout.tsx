@@ -1,6 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Navbar from "@/components/Navbar/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ModalProvider } from "@/components/provider/modal-provider";
 
 export const metadata: Metadata = {
   title: "Medium",
@@ -15,7 +17,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="bg-[white]">{children}</body>
+        <link rel="icon" href="./favicon.ico" />
+        <body className="bg-[white]">
+          <ModalProvider />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

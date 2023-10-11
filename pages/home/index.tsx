@@ -1,6 +1,7 @@
 import Header from "@/components/Home/Header";
 import Banner from "@/components/Home/Banner";
 import PostCard from "@/components/Home/PostCard";
+import Navbar from "@/components/Navbar/Navbar";
 
 const styles = {
   postList : `flex flex-col gap-3 p-2 sm:grid-cols-2 md:gap-6 md:p-6 lg: grid-cols-3`,
@@ -11,7 +12,7 @@ const styles = {
 const Home = () => {
   return (
     <div className={styles.wrapper}>
-      <Header />
+      <Navbar buttonText="Sign in/register"/>
       <Banner />
       <div className={styles.main}>
       <div className={styles.container}>

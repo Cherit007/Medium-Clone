@@ -2,9 +2,9 @@ import Image from 'next/image';
 import Logo from '../../public/logo.png'
 const Banner = () => {
   const styles = {
-    wrapper: "h-max-[10rem] flex items-center justify-center bg-[] border-y border-black",
+    wrapper: "h-max-[10rem] flex items-center justify-center bg-[#FEC016] border-y border-black",
     content: "max-w-7xl flex-1 flex items-center justify-between",
-    tagline: "space-y-5 px-10 flex-3",
+    tagline: "space-y-5 p-5 px-10 flex-3",
     accentedButton: "bg-black text-white py-2 px-4 rounded-full",
   };
   return (

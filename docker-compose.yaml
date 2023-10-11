@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+  web-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+  
+  hash-tag:
+    image: saidhanush7/hashtag:0.0.1.RELEASE
+    ports:
+      - "6000:6000"
+  
+  
