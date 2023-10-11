@@ -30,7 +30,6 @@ export async function GET(req: Request) {
     articles.map((item, index) => {
       fetchImgUrls(item.articleImgUrl, index);
     });
-    console.log("che",articles);
     return NextResponse.json({ data: articles });
   } catch (e) {
     console.log(e);
