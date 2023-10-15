@@ -113,7 +113,27 @@ def add():
         return "success"
     except :
         return "error in adding title to elastic search"
-    
+
+@app.route('/delete-article-elastic-search',methods=["POST"])
+def delete():
+    req=request.get_json()
+    article_name=req["article_name"]
+    body = {
+        'query': {
+            'match': {
+                'article_name': article_name
+            }
+        }
+    }
+    response = es.search(index=index_name, body=body)
+    hits = response['hits']['hits']
+    doc_id = hits[0]['_id']
+    try:
+        es.delete(index=index_name, id=doc_id)
+        return "success"
+    except:
+        return "error in deleting article from elastic search"
+
     
 
 
