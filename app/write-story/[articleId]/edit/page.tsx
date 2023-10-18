@@ -33,7 +33,6 @@ const fetchEditedArticle = async (params: Props) => {
 
 export default async function page(params: Props) {
   const articles = await fetchEditedArticle(params);
-
   return (
     <WriteArticle
       editedDescription={articles[0].description}

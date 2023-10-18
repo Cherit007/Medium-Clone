@@ -4,6 +4,14 @@ const useArticleStore = create<ArticleState>((set) => ({
   title: "",
   description: "",
   topic: "",
+  currentArticle: undefined,
+  setCurrentArticle: (currentArticle) => {
+    set({ currentArticle });
+  },
+  savedArticle: [],
+  setSavedArticle: (savedArticle) => {
+    set({ savedArticle });
+  },
   loading: false,
   setLoading: (loading) => {
     set({ loading });
@@ -31,6 +39,10 @@ const useArticleStore = create<ArticleState>((set) => ({
   userArticles: null,
   setUserArticles: (userArticles) => {
     set({ userArticles });
+  },
+  recommendedTags: [],
+  setRecommendedTags: (recommendedTags) => {
+    set({ recommendedTags });
   },
   img: null,
   setImg: (img) => {

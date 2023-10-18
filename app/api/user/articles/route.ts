@@ -11,10 +11,7 @@ export async function GET(req: Request) {
     const data = await database.listDocuments(
       "651d2c31d4f6223e24e2",
       "651d2c5fca0e679e84a7",
-      [
-        Query.equal("authorId", user?.documents[0].userId),
-        Query.orderDesc("$createdAt"),
-      ]
+      [Query.equal("authorId", user?.userId), Query.orderDesc("$createdAt")]
     );
 
     const articles = data.documents;
@@ -22,7 +19,6 @@ export async function GET(req: Request) {
     const fetchImgUrls = (urlId: string, index: number) => {
       if (urlId) {
         const imgs = storage.getFilePreview("6522a1f72adc01958f6c", urlId);
-        console.log(urlId,imgs.href,"coooo");
         articles[index].articleImgUrl = imgs.href;
       } else articles[index].articleImgUrl = "";
     };

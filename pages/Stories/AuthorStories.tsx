@@ -18,9 +18,8 @@ function AuthorStories() {
     ]
   );
   useEffect(() => {
-    fetchArticles(setLoading, setUserArticles);
+    fetchArticles(setLoading, setUserArticles );
   }, []);
-  console.log(userArticles);
   return (
     <>
       {loading ? (
@@ -51,6 +50,7 @@ function AuthorStories() {
                     articleImgUrl={item.articleImgUrl}
                     $createdAt={item.$createdAt}
                     $id={item.$id}
+                    users={item?.users}
                   />
                 </div>
               );

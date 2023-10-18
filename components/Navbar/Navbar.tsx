@@ -1,7 +1,7 @@
 "use client";
 import useArticleStore from "@/store/useArticleStore";
 import { useAuth, useClerk } from "@clerk/nextjs";
-import '@/../../app/globals.css'
+import "@/../../app/globals.css";
 import {
   Bell,
   LogOut,
@@ -15,7 +15,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
@@ -26,26 +26,49 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import axios from "axios";
+import useDebounceInput from "@/hooks/useDebounceInput";
 
 function Navbar({ buttonText, status }: NavbarProps) {
   const { signOut } = useClerk();
   const { userId } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [title, description, onOpen, titleValidation] = useArticleStore(
-    (state: ArticleState) => [
-      state.title,
-      state.description,
-      state.onOpen,
-      state.titleValidation,
-    ]
-  );
+  const [searchList, setSearchList] = useState<any>();
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  const [
+    title,
+    description,
+    onOpen,
+    titleValidation,
+    setDescription,
+    setTitle,
+    setImg,
+  ] = useArticleStore((state: ArticleState) => [
+    state.title,
+    state.description,
+    state.onOpen,
+    state.titleValidation,
+    state.setDescription,
+    state.setTitle,
+    state.setImg,
+  ]);
 
   const isSignedIn = userId !== null;
+  const isEditMode = pathname?.split("/").pop() === "edit";
+
   const handleWriteArticle = () => {
     if (!isSignedIn) router.push("/sign-in");
-    else if (pathname === "/") router.push("/write-story");
-    else onOpen("writeArticle", { title, description });
+    else if (isEditMode) onOpen("editWriteArticle", { title, description });
+    else if (pathname === "/write-story") {
+      onOpen("writeArticle", { title, description });
+    } else {
+      setTitle("");
+      setDescription("");
+      setImg("");
+      router.push("/write-story");
+    }
   };
 
   const navbarStatus = status === "writeArticle";
@@ -61,10 +84,37 @@ function Navbar({ buttonText, status }: NavbarProps) {
     };
   }, []);
 
+  const debouncedValue = useDebounceInput({ value: searchValue, delay: 1000 });
+  useEffect(() => {
+    fetchSearchedInput(debouncedValue);
+  }, [debouncedValue]);
+  const fetchSearchedInput = async (searchValue: string) => {
+    try {
+      if (searchValue && debouncedValue) {
+        const payload = {
+          keyword: debouncedValue,
+        };
+        const res = await axios.post("/api/search", payload);
+        const data = res.data.data;
+        const filteredOutput = data.filter((item: any) =>
+          item.articles
+            .toLocaleLowerCase()
+            .includes(searchValue.toLocaleLowerCase())
+        );
+        setSearchList(filteredOutput);
+      } else {
+        setSearchList([]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <nav
-      className={`flex justify-between nav-sticky w-full ${
-        !isSignedIn && "sticky top-0 bg-[#FEC016] border-b-1 border-[black] transition ease-in-out delay-150"
+      className={`flex justify-between max-h-[60px] bg-white sticky top-0 z-1000 nav-sticky  w-full ${
+        !isSignedIn &&
+        "sticky top-0 bg-[#FEC016] border-b-1 border-[black] transition ease-in-out delay-150"
       }`}
     >
       <div className="flex ml-6 items-center">
@@ -82,13 +132,31 @@ function Navbar({ buttonText, status }: NavbarProps) {
         </div>
         {isSignedIn &&
           (!navbarStatus ? (
-            <div className="bg-[#F9F9F9] flex h-[40px] items-center rounded-md space-x-5">
-              <Search className="w-6 h-6 ml-2 text-[#6B6B6B]" />
-              <input
-                type="text"
-                placeholder="Search MindScribe"
-                className="outline-none bg-[#F9F9F9]  rounded-sm placeholder:text-[#6B6B6B]"
-              />
+            <div className="flex flex-col h-full">
+              <div className="flex items-center bg-[#F9F9F9] h-[40px] rounded-[20px] space-x-5 p-2 mt-3">
+                <Search className="w-6 h-6 ml-2 text-[#6B6B6B]" />
+                <input
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  type="text"
+                  placeholder="Search MindScribe"
+                  className="outline-none bg-[#F9F9F9]  rounded-sm placeholder:text-[#6B6B6B]"
+                />
+              </div>
+              <div className="flex flex-col bg-[#F9F9F9] shadow-black shadow-md max-w-[400px]">
+                {!!searchList &&
+                  searchList.map((item: any, index: number) => {
+                    return (
+                      <Link href={`/${index}/${item?.article_id}`}>
+                        <p
+                          className="text-black bg-red p-3 cursor-pointer rounded-[20px] hover:bg-[#eceaea]"
+                          key={index}
+                        >
+                          {item?.articles}
+                        </p>
+                      </Link>
+                    );
+                  })}
+              </div>
             </div>
           ) : (
             <div>Draft in C</div>

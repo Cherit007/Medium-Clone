@@ -1,9 +1,11 @@
 import SideBarFeed from "@/components/Articles/SideBarFeed";
 import Navbar from "@/components/Navbar/Navbar";
+import { currentProfile } from "@/lib/current-profile";
 import AuthorStories from "@/pages/Stories/AuthorStories";
 import React, { Suspense } from "react";
 
 async function Stories() {
+  const user = await currentProfile();
   return (
     <>
       <Navbar buttonText="Write" status="navbar" />
@@ -16,11 +18,11 @@ async function Stories() {
               </p>
             }
           >
-            <AuthorStories />
+            <AuthorStories  />
           </Suspense>
         </div>
         <div className="hidden md:flex col-span-1">
-          <SideBarFeed />
+          <SideBarFeed currentUser={user}/>
         </div>
       </main>
     </>

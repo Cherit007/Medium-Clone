@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { WriteArticleModal } from "../modals/write-article-modal";
+import { WriteEditArticleModal } from "../modals/write-edit-article-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -14,6 +15,7 @@ export const ModalProvider = () => {
   return (
     <>
       <WriteArticleModal />
+      <WriteEditArticleModal/>
     </>
   );
 };

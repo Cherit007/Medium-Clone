@@ -19,15 +19,13 @@ import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { fetchArticles } from "@/controllers/fetchUserArticles";
-import { ScrollArea } from "../ui/scroll-area";
 
 const formSchema = z.object({
   topic: z.string(),
 });
 
-export const WriteArticleModal = () => {
+export const WriteEditArticleModal = () => {
   const [
-    setImg,
     title,
     setUserArticles,
     topic,
@@ -42,7 +40,6 @@ export const WriteArticleModal = () => {
     setLoading,
     img,
   ] = useArticleStore((state) => [
-    state.setImg,
     state.title,
     state.setUserArticles,
     state.topic,
@@ -59,6 +56,7 @@ export const WriteArticleModal = () => {
   ]);
 
   const router = useRouter();
+  const pathname = useParams();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -69,13 +67,17 @@ export const WriteArticleModal = () => {
 
   const onSubmit = async () => {
     let articleImgUrl;
-    if (imgUrl) {
+    if (typeof imgUrl === "object") {
       articleImgUrl = await storage.createFile(
         "6522a1f72adc01958f6c",
         ID.unique(),
         imgUrl
       );
-    } else articleImgUrl = "";
+    } else if (typeof imgUrl !== "string" && !!imgUrl) articleImgUrl = "";
+    else {
+      const url = img.split("/");
+      articleImgUrl = url[url.length - 2];
+    }
 
     const payload = {
       topic,
@@ -83,8 +85,8 @@ export const WriteArticleModal = () => {
       title,
       description,
     };
-    await fetch("/api/write-article", {
-      method: "POST",
+    await fetch(`/api/write-article/${pathname?.articleId}/edit`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -92,9 +94,6 @@ export const WriteArticleModal = () => {
     }).then(async (res) => {
       const { data } = await res.json();
       setUserArticles(data);
-      setTitle("");
-      setDescription("");
-      setImg("");
     });
     onClose();
     await fetchArticles(setLoading, setUserArticles);
@@ -102,7 +101,7 @@ export const WriteArticleModal = () => {
   };
   const isLoading = form.formState.isSubmitting;
 
-  const isModelOpen = isOpen && type === "writeArticle";
+  const isModelOpen = isOpen && type === "editWriteArticle";
 
   return (
     <Dialog open={isModelOpen} onOpenChange={onClose}>
@@ -133,16 +132,14 @@ export const WriteArticleModal = () => {
               </p>
               <Select onValueChange={setTopic}>
                 <SelectTrigger>
-                  <SelectValue className="" placeholder={"Arts"}></SelectValue>
+                  <SelectValue className="" placeholder={topic}></SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-white h-full">
-                  <ScrollArea className="h-72 w-48 rounded-md">
-                    {topics.map((item: UserTopics) => (
-                      <SelectItem value={item.topic} className="cursor-pointer">
-                        {item.topic}
-                      </SelectItem>
-                    ))}
-                  </ScrollArea>
+                <SelectContent className="bg-white">
+                  {topics.map((item:UserTopics) => (
+                    <SelectItem value={item.topic} className="cursor-pointer">
+                      {item.topic}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <Button

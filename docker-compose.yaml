@@ -1,18 +1,20 @@
 version: '3.5'
 services:
-  web-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-  
   hash-tag:
     image: saidhanush7/hashtag:0.0.1.RELEASE
     ports:
       - "6000:6000"
+  
+  ask-ai:
+    image: saidhanush7/ask-ai:0.0.1.RELEASE
+    ports:
+      - "7001:7000"
+  
+  search-engine:
+    image: saidhanush7/search-engine:0.0.1.RELEASE
+    ports:
+      - "8000:8000"
+  
+
   
   

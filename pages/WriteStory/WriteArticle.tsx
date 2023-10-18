@@ -7,47 +7,38 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 import useArticleStore from "@/store/useArticleStore";
-import { Atom, Image as Img, PlusCircle, X } from "lucide-react";
-import { impPoints } from "@/constants";
-import { z } from "zod";
+import { Atom, Image as Img, Loader2, PlusCircle, X } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
 
-const formSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  imgUrl: z.string().min(1).optional(),
-});
 function WriteArticle({
   editedDescription,
   editedTitle,
   editedArticleImgUrl,
 }: EditedArticleProps) {
   const [uploadButton, setUploadButton] = useState<boolean>(false);
+  const [aiLoading, setAiLoading] = useState<boolean>(false);
+  const [aiResults, setAiResults] = useState<string[]>();
   const pathname = useParams();
   const [
     img,
     setImg,
     title,
-    imgUrl,
     description,
     setImgUrl,
     setDescription,
     setTitle,
-    setPublish,
     setTitleValidation,
     titleValidation,
   ] = useArticleStore((state: ArticleState) => [
     state.img,
     state.setImg,
     state.title,
-    state.imgUrl,
     state.description,
     state.setImgUrl,
     state.setDescription,
     state.setTitle,
-    state.setPublish,
     state.setTitleValidation,
     state.titleValidation,
   ]);
@@ -73,11 +64,26 @@ function WriteArticle({
     else setTitleValidation(false);
   };
 
+  const handleAskAi = async () => {
+    const payload = {
+      text: title,
+    };
+    setAiLoading(true);
+    await fetch("/api/ask-ai", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }).then(async (res) => {
+      const resp = await res.json();
+      setAiResults(resp.data.result);
+    });
+    setAiLoading(false);
+  };
+
   return (
     <>
       <Navbar buttonText={"Publish"} status="writeArticle" />
-      <div className="w-full grid grid-rows-8 grid-flow-col md:gap-x-4 mx-auto max-w-[90%] md:max-w-6xl mt-[30px]">
-        <div className="row-span-6 h-full col-span-7">
+      <div className="w-full flex flex-col md:flex-row justify-between mx-auto md:max-w-6xl mt-[30px] gap-20">
+        <div className="h-full w-full md:[70%] col-span-7">
           {img && (
             <div className="flex justify-center">
               <X
@@ -149,25 +155,56 @@ function WriteArticle({
             ></textarea>
           </div>
         </div>
-        <div className="bg-[#F2F2F2] row-span-2 col-span-1 w-full flex flex-auto p-3 justify-center  rounded-[20px]">
+        <div className="bg-[#F2F2F2] w-[80%] mx-auto md:w-[30%] flex flex-auto p-3 justify-center  rounded-[20px]">
           <div className="flex flex-col text-semibold justify-around">
             <div className="flex text-center">
               <Atom className="w-6 h-6 text-[#4092b3] animate-spin" />
               <p> Ask Chat-GPT to summarize your article</p>
             </div>
-            <ul className="list-disc mt-5">
-              {impPoints.map((point, index) => {
-                return <li key={index}>{point}</li>;
-              })}
+            <ul className="mt-5">
+              {aiLoading ? (
+                <>
+                  <Loader2 className="h-6 w-6 animate-spin text-[#4092b3] mx-auto" />
+                  <p className="text-center text-[#6B6B6B] mt-4">
+                    This may take a moment.
+                  </p>
+                </>
+              ) : !!aiResults ? (
+                aiResults.map((point, index) => {
+                  return <li key={index}>{point}</li>;
+                })
+              ) : (
+                <div className="flex flex-col text-[#6B6B6B]">
+                  <p>
+                    {" "}
+                    -{`>`} You can say 'help' at any time if you need
+                    assistance.
+                  </p>
+                  <p>
+                    -{`> `}
+                    Enter the title of the article you'd like me to summarize
+                  </p>
+                </div>
+              )}
             </ul>
-            <Button variant="outline" className="rounded-full mt-5">
-              Ask
-            </Button>
+            <div className="flex flex-col">
+              {!aiLoading && <p className="text-center mx-auto font-bold max-w-[200px] break-words">{title}</p>}
+              <Button
+                onClick={handleAskAi}
+                variant="outline"
+                className="rounded-full mt-5"
+              >
+                {aiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Ask
+              </Button>
+            </div>
           </div>
         </div>
       </div>
     </>
   );
 }
+
+export const getStaticProps = () => {};
 
 export default WriteArticle;
