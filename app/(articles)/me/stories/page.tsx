@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { currentProfile } from "@/lib/current-profile";
 import AuthorStories from "@/pages/Stories/AuthorStories";
 import React, { Suspense } from "react";
+import { Loader } from "lucide-react";
 
 async function Stories() {
   const user = await currentProfile();
@@ -14,7 +15,7 @@ async function Stories() {
           <Suspense
             fallback={
               <p className="bg-red-300 flex justify-center items-center w-full h-[100vh]">
-                Loading...
+                <Loader className="w-6 h-6 animate-spin" />
               </p>
             }
           >

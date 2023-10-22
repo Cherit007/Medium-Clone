@@ -196,10 +196,12 @@ function Navbar({ buttonText, status }: NavbarProps) {
                   My Account
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <Link href={"/me/profile"}>
+                <DropdownMenuItem className="cursor-pointer">
                   <User2 className="w-6 h-6 mr-2 text-[#6B6B6B]" />
                   Profile
                 </DropdownMenuItem>
+                </Link>
                 <Link href={"/me/stories"}>
                   {" "}
                   <DropdownMenuItem className="cursor-pointer">
