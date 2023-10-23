@@ -74,3 +74,7 @@ interface UserTopics {
   topic: string;
 }
 type ModalType = "writeArticle" | "editWriteArticle";
+
+interface MembershipPlanFeatures {
+  label: string
+}

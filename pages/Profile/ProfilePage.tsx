@@ -134,7 +134,6 @@ function ProfilePage({ currentUser }: any) {
             setShowModal(false);
         }
         else {
-            selectedTopics
             await database.updateDocument(
                 "651d2c31d4f6223e24e2",
                 "65219b9e7c62b9078824",

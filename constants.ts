@@ -38,3 +38,19 @@ export const impPoints = {
     " \n6. He was assassinated on 30 January 1948 by Nathuram Godse, a Hindu nationalist ",
   ],
 };
+
+export const articleDisplayCount = 10;
+
+export const articleFeedUpdateAnimationDelay = 1000;
+
+export const membershipPrice = 5;
+
+export const planFeatures: MembershipPlanFeatures[] = [
+  {label: "Text to Speech"},
+  {label: "Integrated ChatGPT"},
+  {label: "2 team members"},
+  {label: "20GB cloud storage"},
+  {label: "Integration help"},
+  {label: "24×7 phone & email support"},
+
+]
