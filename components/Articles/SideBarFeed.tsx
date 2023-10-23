@@ -3,7 +3,7 @@
 import useArticleStore from "@/store/useArticleStore";
 import { useEffect } from "react";
 import ArticleSavedCard from "./ArticleSavedCard";
-import TopicRecommendation from "./TopicRecommendation";
+import TopicRecommendation from "./Recommendations/TopicRecommendation";
 
 function SideBarFeed({ currentUser, hotTopicsArr }: any) {
   const [savedArticle, setSavedArticle, setRecommendedTags] = useArticleStore(
@@ -19,7 +19,7 @@ function SideBarFeed({ currentUser, hotTopicsArr }: any) {
   }, []);
   return (
     <div className="p-2 space-y-10 h-full w-full">
-      <TopicRecommendation heading="Hot Topics" description="" />
+      <TopicRecommendation heading="Hot Topics" />
       <h2 className="text-[#242424] font-semibold">Recently saved</h2>
       {savedArticle && savedArticle.length > 0 ? (
         savedArticle.map((item) => {

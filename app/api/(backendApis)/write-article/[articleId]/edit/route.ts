@@ -9,7 +9,7 @@ export async function PATCH(
 ) {
   try {
     const user = await currentProfile();
-    if (user?.length === 0)
+    if (!user)
       return new NextResponse("User not found", { status: 401 });
 
     const userDetails = await req.json();

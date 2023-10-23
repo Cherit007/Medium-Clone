@@ -38,16 +38,21 @@ interface ArticleState {
   setSavedArticle: (savedArticle) => void;
   recommendedTags: [];
   setRecommendedTags: (recommendedTags) => void;
+  recommendedArticles: [];
+  setRecommendedArticle: (recommendedTags) => void;
 }
 
+type ArticleCardType = "recommended" | "me";
+
 interface ArticleProps {
-  status?: string;
+  status?: ArticleCardType;
   title: string;
   description: string;
   topic: string;
   articleImgUrl?: string | StaticImport;
   $createdAt: string;
   $id: string;
+  audioUrl?: string;
   users: {
     name: string;
     profile_img_url: string;
@@ -55,7 +60,7 @@ interface ArticleProps {
     $id: string;
   };
   currentUser?: any;
-  subTopics ?: string[] | [];
+  subTopics?: string[] | [];
 }
 
 interface EditedArticleProps {

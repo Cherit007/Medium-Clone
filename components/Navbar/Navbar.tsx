@@ -84,7 +84,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
     };
   }, []);
 
-  const debouncedValue = useDebounceInput({ value: searchValue, delay: 1000 });
+  const debouncedValue = useDebounceInput({ value: searchValue, delay: 500 });
   useEffect(() => {
     fetchSearchedInput(debouncedValue);
   }, [debouncedValue]);

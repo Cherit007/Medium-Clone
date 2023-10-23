@@ -1,11 +1,10 @@
 import { auth } from "@clerk/nextjs";
 import { database } from "@/appwriteConfig";
 import { Query } from "appwrite";
-import { redirect } from "next/navigation";
 
 export const currentProfile = async () => {
   const { userId } = auth();
-  if (!userId) return redirect("/sign-in")
+  if (!userId) return null;
 
   const profile = await database.listDocuments(
     "651d2c31d4f6223e24e2",

@@ -15,6 +15,21 @@ services:
     ports:
       - "8000:8000"
   
+  recommendations:
+    image: saidhanush7/recommendation-system:0.0.1.RELEASE
+    ports:
+      - "9000:9000"
+
+  mail-service:
+    image: saidhanush7/mail-service:0.0.1.RELEASE
+    ports:
+      - "9080:9080"
+
+  text-speech:
+    image: saidhanush7/text-to-speech:0.0.1.RELEASE
+    ports:
+      - "9090:9090"
+  
 
   
   

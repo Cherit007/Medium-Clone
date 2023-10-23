@@ -8,6 +8,10 @@ const useArticleStore = create<ArticleState>((set) => ({
   setCurrentArticle: (currentArticle) => {
     set({ currentArticle });
   },
+  recommendedArticles: [],
+  setRecommendedArticle: (recommendedArticles) => {
+    set({ recommendedArticles });
+  },
   savedArticle: [],
   setSavedArticle: (savedArticle) => {
     set({ savedArticle });

@@ -1,8 +1,10 @@
 "use client";
 import Image from "next/image";
-import { Search, MailPlus } from "lucide-react";
-import Logo from "../../public/logo.png";
+import { MailPlus } from "lucide-react";
 import TopicRecommendation from "./TopicRecommendation";
+import logo from "../../../public/logo.png";
+import { useEffect, useRef, useState } from "react";
+import { fetchHashTags } from "@/controllers/fetchHashTags";
 import useArticleStore from "@/store/useArticleStore";
 
 const styles = {
@@ -30,24 +32,41 @@ const styles = {
   articleContent: `flex-[4]`,
 };
 const Recommendations = ({ user }: { user: any }) => {
-  const [currentArticle, userArticles] = useArticleStore((state) => [
-    state.currentArticle,
-    state.userArticles,
-  ]);
+  const [currentArticle, setRecommendedTags, setLoading] = useArticleStore(
+    (state) => [
+      state.currentArticle,
+      state.setRecommendedTags,
+      state.setLoading,
+    ]
+  );
+  const callApi = useRef(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (currentArticle?.description && callApi.current) {
+          callApi.current = false;
+          await fetchHashTags(
+            currentArticle?.description,
+            setRecommendedTags,
+            user,
+            currentArticle?.$id,
+            setLoading
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [currentArticle?.description]);
+
   return (
     <div className={styles.wrapper}>
-      <div className={styles.accentedButton}>Get Unlimited Access</div>
-      <div className={styles.searchBar}>
-        <Search />
-        <input
-          className={styles.searchInput}
-          placeholder="Search"
-          type="text"
-        />
-      </div>
       <div className={styles.authorContainer}>
         <div className={styles.authorImageContainer}>
-          <Image src={Logo} alt="DP" width={100} height={100} />
+          <Image src={logo} alt="DP" width={100} height={100} />
         </div>
         <div className={styles.authorName}>{user?.name}</div>
         <div className={styles.authorFollowing}>2M Followers</div>
@@ -57,7 +76,7 @@ const Recommendations = ({ user }: { user: any }) => {
             <MailPlus />
           </button>
         </div>
-        <TopicRecommendation heading={"#Topics"} user={user} description={currentArticle?.description as string} />
+        <TopicRecommendation heading={"#Topics"} />
       </div>
     </div>
   );

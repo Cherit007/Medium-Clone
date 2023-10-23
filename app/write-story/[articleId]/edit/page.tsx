@@ -35,9 +35,9 @@ export default async function page(params: Props) {
   const articles = await fetchEditedArticle(params);
   return (
     <WriteArticle
-      editedDescription={articles[0].description}
-      editedTitle={articles[0].title}
-      editedArticleImgUrl={articles[0].articleImgUrl}
+      editedDescription={articles[0]?.description}
+      editedTitle={articles[0]?.title}
+      editedArticleImgUrl={articles[0]?.articleImgUrl}
     />
   );
 }

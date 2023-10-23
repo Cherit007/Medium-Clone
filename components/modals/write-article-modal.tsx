@@ -20,6 +20,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { fetchArticles } from "@/controllers/fetchUserArticles";
 import { ScrollArea } from "../ui/scroll-area";
+import { encryptText } from "@/lib/encrypt-decrypt";
+import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
   topic: z.string(),
@@ -59,6 +61,7 @@ export const WriteArticleModal = () => {
   ]);
 
   const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -68,6 +71,11 @@ export const WriteArticleModal = () => {
   });
 
   const onSubmit = async () => {
+    toast({
+      variant: "destructive",
+      title: "Published this article",
+      className: "bg-[green] text-white",
+    });
     let articleImgUrl;
     if (imgUrl) {
       articleImgUrl = await storage.createFile(
@@ -76,12 +84,12 @@ export const WriteArticleModal = () => {
         imgUrl
       );
     } else articleImgUrl = "";
-
+    // const encryptedDescription = encryptText(description, "secretKey");
     const payload = {
       topic,
       articleImgUrl,
       title,
-      description,
+      description
     };
     await fetch("/api/write-article", {
       method: "POST",
@@ -137,8 +145,12 @@ export const WriteArticleModal = () => {
                 </SelectTrigger>
                 <SelectContent className="bg-white h-full">
                   <ScrollArea className="h-72 w-48 rounded-md">
-                    {topics.map((item: UserTopics) => (
-                      <SelectItem value={item.topic} className="cursor-pointer">
+                    {topics.map((item: UserTopics, index: number) => (
+                      <SelectItem
+                        value={item.topic}
+                        key={index}
+                        className="cursor-pointer"
+                      >
                         {item.topic}
                       </SelectItem>
                     ))}

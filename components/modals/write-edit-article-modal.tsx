@@ -135,8 +135,8 @@ export const WriteEditArticleModal = () => {
                   <SelectValue className="" placeholder={topic}></SelectValue>
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {topics.map((item:UserTopics) => (
-                    <SelectItem value={item.topic} className="cursor-pointer">
+                  {topics.map((item:UserTopics,index:number) => (
+                    <SelectItem value={item.topic} key={index} className="cursor-pointer">
                       {item.topic}
                     </SelectItem>
                   ))}

@@ -1,16 +1,15 @@
 import { currentProfile } from "@/lib/current-profile";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import axios from "axios";
 
 export async function POST(req: Request) {
   try {
     const user = await currentProfile();
-    if (user?.length === 0)
-      return new NextResponse("User not found", { status: 401 });
+    if (!user) return new NextResponse("User not found", { status: 401 });
 
     const userDetails = await req.json();
-    const res = await axios.post("http://localhost:7001/ask-ai", userDetails);
+
+    const res = await axios.post("http://localhost:8000/search", userDetails);
 
     return NextResponse.json({ data: res.data });
   } catch (e) {

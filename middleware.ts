@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export default authMiddleware({
   ignoredRoutes: ["/api/webhook/user"],
-  publicRoutes: ["/"],
   afterAuth(auth, req, evt) {
     // handle users who dont have account
     if (!auth.userId && !auth.isPublicRoute) {
@@ -13,5 +12,10 @@ export default authMiddleware({
 });
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)","/ask-ai"],
+  matcher: [
+    "/((?!.*\\..*|_next).*)",
+    "/",
+    "/(api|trpc)(.*)",
+    "/:path/:path*",
+  ],
 };

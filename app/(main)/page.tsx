@@ -3,6 +3,7 @@ import ArticleFeed from "@/components/Articles/ArticleFeed";
 import SideBarFeed from "@/components/Articles/SideBarFeed";
 import Navbar from "@/components/Navbar/Navbar";
 import { currentProfile } from "@/lib/current-profile";
+import { decryptText } from "@/lib/encrypt-decrypt";
 import { redirectUser } from "@/lib/redirect-user";
 import Home from "@/pages/home";
 import { Query } from "appwrite";
@@ -31,6 +32,10 @@ const fetchFeedArticles = async (user: any) => {
   articles = articles.concat(...results);
   articles.forEach((item, index) => {
     fetchImgUrls(item?.articleImgUrl, index);
+    // articles[index].description = decryptText(
+    //   item.description,
+    //   "secretKey"
+    // ) as string;
   });
 
   let hotTopics: string[] = [];

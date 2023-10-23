@@ -5,7 +5,7 @@ import axios from "axios";
 export async function POST(req: Request) {
   try {
     const user = await currentProfile();
-    if (user?.length === 0)
+    if (!user)
       return new NextResponse("User not found", { status: 401 });
     const payload = await req.json();
     const res = await axios.post("http://localhost:6000/tag", payload);

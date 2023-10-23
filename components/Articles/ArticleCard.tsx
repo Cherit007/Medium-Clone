@@ -1,14 +1,14 @@
 "use client";
 import { database } from "@/appwriteConfig";
 import { fetchArticles } from "@/controllers/fetchUserArticles";
+import { calculateArticleReadTime } from "@/lib/calculate-read-time";
 import { calculateTime } from "@/lib/calculate-time";
 import useArticleStore from "@/store/useArticleStore";
 import { DialogClose } from "@radix-ui/react-dialog";
+import axios from "axios";
 import { BookmarkPlus, BookPlus } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Separator } from "../ui/separator";
+import { useToast } from "../ui/use-toast";
 
 function ArticleCard({
   status,
@@ -40,6 +41,8 @@ function ArticleCard({
     savedArticle,
     setUserArticles,
     setLoading,
+    setRecommendedTags,
+    setRecommendedArticle,
   ] = useArticleStore((state) => [
     state.setDescription,
     state.setTitle,
@@ -49,9 +52,12 @@ function ArticleCard({
     state.savedArticle,
     state.setUserArticles,
     state.setLoading,
+    state.setRecommendedTags,
+    state.setRecommendedArticle,
   ]);
 
   const router = useRouter();
+  const { toast } = useToast();
   const isSavedArticle = savedArticle?.find((i) => i?.$id === ($id as any));
   const handleArticleEdit = (
     title: string,
@@ -70,6 +76,11 @@ function ArticleCard({
     item: ArticleProps
   ) => {
     e.stopPropagation();
+    toast({
+      variant: "destructive",
+      title: "Saved this article",
+      className: "bg-[green] text-white rounded-[20px]",
+    });
     if (!isSavedArticle) {
       setSavedArticle([...savedArticle, item]);
       await database.updateDocument(
@@ -81,6 +92,11 @@ function ArticleCard({
         }
       );
     } else {
+      toast({
+        className: "bg-[red] text-white rounded-[20px]",
+        variant: "default",
+        title: "Removed this article",
+      });
       const newArr = savedArticle;
       const index = newArr.findIndex((i) => i?.$id === item?.$id);
       newArr.splice(index, 1);
@@ -96,26 +112,54 @@ function ArticleCard({
     }
   };
 
-  const handleArticleDelete = async ($id: string) => {
-    await database.deleteDocument(
-      "651d2c31d4f6223e24e2",
-      "651d2c5fca0e679e84a7",
-      $id
-    );
-    await fetchArticles(setLoading, setUserArticles);
+  const handleArticleDelete = async ($id: string, title: string) => {
+    console.log($id, title);
+    try {
+      const payload = {
+        id: $id,
+        title: title,
+      };
+      await axios.post("/api/delete-article", payload);
+      await fetchArticles(setLoading, setUserArticles);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleArticleClick = () => {
+    router.push(`/${users?.name}/${$id}`);
   };
 
   return (
-    <div className="mt-3 cursor-pointer">
+    <div
+      className={`mt-3 cursor-pointer ${
+        status === "recommended" && "h-[350px] w-[300px] ml-[50px] mx-auto"
+      }`}
+    >
+      {articleImgUrl && status === "recommended" && (
+        <Image
+          src={articleImgUrl}
+          alt="image"
+          className="max-w-400 w-400 mb-3"
+          width={300}
+          height={50}
+        />
+      )}
       {status !== "me" && (
-        <div className="flex mt-10 items-center space-x-2 text-sm">
-          <Image
-            src={users?.profile_img_url}
-            width={30}
-            height={30}
-            className="rounded-full"
-            alt="logo"
-          />
+        <div
+          className={`flex  mt-10 ${
+            status === "recommended" && "mt-0"
+          } items-center space-x-2 text-sm`}
+        >
+          {users?.profile_img_url && (
+            <Image
+              alt="logo"
+              src={users?.profile_img_url}
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
+          )}
           <h2 className="text-[#4d4b4b]"> {users?.name}.</h2>
           <p className="text-[#6B6B6B]">{calculateTime($createdAt)}</p>
         </div>
@@ -123,38 +167,25 @@ function ArticleCard({
       <div className="space-y-2">
         <div className="flex items-center justify-between space-x-5">
           <div
-            className="flex flex-col space-y-2"
-            onClick={() => {
-              setCurrentArticle({
-                status,
-                title,
-                description,
-                topic,
-                articleImgUrl,
-                $createdAt,
-                $id,
-                users,
-              });
-              router.push(`/${users?.name}/${$id}`);
-            }}
+            className="flex flex-col space-y-2 flex-1"
+            onClick={handleArticleClick}
           >
             <h2 className="font-bold text-[20px] ">{title}</h2>
             <p>{description.slice(0, 400)}....</p>
           </div>
-          {articleImgUrl && (
+          {articleImgUrl && status !== "recommended" && (
             <Image src={articleImgUrl} alt="image" width={80} height={50} />
           )}
         </div>
         {status !== "me" && (
-          <div className="flex justify-between w-[75%] items-center">
-            <div className="flex items-center space-x-3">
-              <Link
-                href={"/"}
-                className="bg-[#F2F2F2] rounded-[15px] text-[#242424] text-sm p-2"
-              >
+          <div className="flex justify-between w-full items-center">
+            <div className="flex items-center w-full space-x-3">
+              <p className="bg-[#F2F2F2] rounded-[15px] text-[#242424] text-sm p-2">
                 {topic}
-              </Link>
-              <p className="text-[#6B6B6B] text-sm">5 mins read</p>
+              </p>
+              <p className="text-[#6B6B6B] text-sm">
+                {calculateArticleReadTime(description)} read
+              </p>
             </div>
 
             <BookmarkPlus
@@ -211,7 +242,7 @@ function ArticleCard({
                       </Button>
                     </DialogClose>
                     <Button
-                      onClick={() => handleArticleDelete($id)}
+                      onClick={() => handleArticleDelete($id, title)}
                       variant="outline"
                       className="bg-[#C94A4A] text-white rounded-[20px] hover:bg-[#C94A4A] hover:text-white"
                     >

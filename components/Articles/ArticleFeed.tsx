@@ -20,7 +20,7 @@ function ArticleFeed({ articles, currentUser }: any) {
               users={item?.users}
               status={item.status}
               title={item.title}
-              description={item.description}
+              description={item?.description}
               $createdAt={item.$createdAt}
               articleImgUrl={item.articleImgUrl}
               $id={item.$id}
