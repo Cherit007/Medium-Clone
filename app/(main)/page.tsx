@@ -12,7 +12,7 @@ const fetchFeedArticles = async (user: any) => {
   let articles: ArticleProps[] = [];
   const topics = user?.userTopics;
   const results = await Promise.all(
-    topics.map(async (item: string) => {
+    topics?.map(async (item: string) => {
       const res = await database.listDocuments(
         "651d2c31d4f6223e24e2",
         "651d2c5fca0e679e84a7",
@@ -68,8 +68,8 @@ const fetchFeedArticles = async (user: any) => {
 const HomePage = async () => {
   await redirectUser();
   const user = await currentProfile();
-
-  const [articles, hotTopicsArr] = await fetchFeedArticles(user);
+  let articles, hotTopicsArr;
+  if (user) [articles, hotTopicsArr] = await fetchFeedArticles(user);
   return (
     <div>
       {!user?.$id ? (

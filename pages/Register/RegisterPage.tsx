@@ -1,27 +1,26 @@
 "use client";
-import { database } from "@/appwriteConfig";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 function RegisterPage({ user }: any) {
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState<string>(user?.name);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const handleCreateAccount = async () => {
     setLoading(true);
-    await database.updateDocument(
-      "651d2c31d4f6223e24e2",
-      "65219b9e7c62b9078824",
-      user?.$id,
-      {
-        name: name,
-        signUpStatus:"welcome"
-      }
-    );
+    const payload = {
+      recipient_email: user?.email,
+      subject: `Welcome ${user?.name}`,
+      message:
+        "Welcome to MindScribe. We're thrilled to have you on board! Your journey to mindfulness and personal development begins here.",
+      name: name,
+    };
+    await axios.post("/api/email", payload);
     router.push("/welcome");
     setLoading(false);
   };

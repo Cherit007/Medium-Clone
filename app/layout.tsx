@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ModalProvider } from "@/components/provider/modal-provider";
-import { SocketProvider } from "@/components/provider/use-socket-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
@@ -20,11 +19,9 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <link rel="icon" href="./favicon.ico" />
         <body className="bg-[white]">
-          {/* <SocketProvider> */}
           <ModalProvider />
           {children}
           <Toaster />
-          {/* </SocketProvider> */}
         </body>
       </html>
     </ClerkProvider>

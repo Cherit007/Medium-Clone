@@ -52,7 +52,7 @@ async function handler(req: Request) {
   }
   const eventType = evt.type;
 
-  if (eventType === "user.created" || "user.updated") {
+  if (eventType === "user.created") {
     checkProfile(evt);
   }
   return new NextResponse(body, { status: 201 });
