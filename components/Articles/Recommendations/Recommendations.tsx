@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { MailPlus } from "lucide-react";
 import TopicRecommendation from "./TopicRecommendation";
-import logo from "../../../public/logo.png";
+import logo from "../../../public/Logo.jpeg";
 import { useEffect, useRef, useState } from "react";
 import { fetchHashTags } from "@/controllers/fetchHashTags";
 import useArticleStore from "@/store/useArticleStore";
@@ -64,21 +64,21 @@ const Recommendations = ({ user }: { user: any }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.authorContainer}>
-        <div className={styles.authorImageContainer}>
+      {/* <div className={styles.authorContainer}> */}
+        {/* <div className={styles.authorImageContainer}>
           <Image src={logo} alt="DP" width={100} height={100} />
-        </div>
-        <div className={styles.authorName}>{user?.name}</div>
-        <div className={styles.authorFollowing}>2M Followers</div>
-        <div className={styles.authorActions}>
-          <button className={styles.actionButton}>Follow</button>
-          <button className={styles.actionButton}>
-            <MailPlus />
-          </button>
-        </div>
+        </div> */}
+        {/* <div className={styles.authorName}>{user?.name}</div> */}
+        {/* <div className={styles.authorFollowing}>2M Followers</div>
+        {/* <div className={styles.authorActions}> */}
+          {/* <button className={styles.actionButton}>Follow</button> */}
+          {/* <button className={styles.actionButton}> */}
+            {/* <MailPlus /> */}
+          {/* </button> */} 
+        {/* </div> */}
         <TopicRecommendation heading={"#Topics"} />
       </div>
-    </div>
+    // </div>
   );
 };
 export default Recommendations;
