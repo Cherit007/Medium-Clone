@@ -2,7 +2,6 @@ import { currentProfile } from "@/lib/current-profile";
 import { NextResponse } from "next/server";
 import axios from "axios";
 import fs from "fs";
-import { saveAs } from "file-saver";
 import util from "util";
 export async function POST(req: Request) {
   try {
