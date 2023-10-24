@@ -11,7 +11,7 @@ const Article = async () => {
     <div className="flex flex-col">
       <Navbar buttonText="Write" status="navbar" />
       <div className="flex flex-grow h-full">
-        <ReadersNav />
+        {/* <ReadersNav /> */}
         <ArticleMain />
         <Recommendations user={user} />
       </div>

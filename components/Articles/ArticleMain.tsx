@@ -194,10 +194,10 @@ const ArticleMain = () => {
                 </div>
               </div>
             </div>
-            <div className={styles.socials}>
+            {/* <div className={styles.socials}>
               <Bookmark />
               <MoreHorizontal />
-            </div>
+            </div> */}
           </div>
           <div className={styles.articleMainContainer}>
             {currentArticle?.articleImgUrl && (

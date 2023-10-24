@@ -30,6 +30,10 @@ services:
     ports:
       - "9090:9090"
   
+  summarize-ai:
+    image: saidhanush7/summarizeai:0.0.1.RELEASE
+    ports:
+      - "9070:9070"
 
   
   
