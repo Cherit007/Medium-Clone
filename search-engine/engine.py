@@ -9,8 +9,8 @@ app=Flask(__name__)
 
 #es = Elasticsearch(hosts=["http://localhost:9200"])
 es = Elasticsearch(
-    cloud_id='Mindscribe-deployment:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJDJjYmY4MjBkNTc5ZjQ5OGVhODZhNTVkNmQxOGVlYTFmJGJkNGY3NWJkM2ExNzRlMjk5NDFlMjM4ODI3N2E5ZGM2',
-    api_key='UEJkQkhZc0JVaTAyTUkxRHFQN186ZlVJZnNJblRTMi1vNWhKbnlJVlZiQQ==',
+    cloud_id='MindScribe:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvOjQ0MyRjYjQ4ZDcwMTA3NzU0ZWJhYmVkM2FhYjE5MWY3NzIwNiQ2N2U3ODBlMmQzNTg0YjBjOWZhNmMwNmY0NjFlYmE2Yg==',
+    basic_auth=("elastic", "SF3RIqkefcjNQSHKOGI32twL")
 )
 ## THIS IS THE OCE TO CREATE INDEX IN THE ELASTC SEARCH AND LOAD THE DATA IN IT
 
