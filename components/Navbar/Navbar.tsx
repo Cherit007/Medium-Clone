@@ -125,7 +125,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
               alt="logo"
               width={80}
               height={80}
-              className="opacity-70 mr-3 rounded-full"
+              className="opacity-70 h-13 w-20 mr-3 rounded-full"
             />
           </Link>
           {!isSignedIn && <p className="text-[30px] font-bold">MindScribe</p>}
@@ -197,10 +197,10 @@ function Navbar({ buttonText, status }: NavbarProps) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <Link href={"/me/profile"}>
-                <DropdownMenuItem className="cursor-pointer">
-                  <User2 className="w-6 h-6 mr-2 text-[#6B6B6B]" />
-                  Profile
-                </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <User2 className="w-6 h-6 mr-2 text-[#6B6B6B]" />
+                    Profile
+                  </DropdownMenuItem>
                 </Link>
                 <Link href={"/me/stories"}>
                   {" "}
@@ -209,10 +209,12 @@ function Navbar({ buttonText, status }: NavbarProps) {
                     Stories
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>
-                  <Settings className="w-6 h-6 mr-2 text-[#6B6B6B]" />
-                  Settings
-                </DropdownMenuItem>
+                <Link href={"/me/settings"}>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Settings className="w-6 h-6 mr-2 text-[#6B6B6B]" />
+                    Settings
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem>
                   <Sparkles className="w-6 h-6 mr-2 text-[#6B6B6B]" />
                   Become a member

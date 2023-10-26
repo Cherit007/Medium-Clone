@@ -52,10 +52,11 @@ const useArticleStore = create<ArticleState>((set) => ({
   setImg: (img) => {
     set({ img });
   },
-  data: {},
+  data: undefined,
   type: null,
   isOpen: false,
   onClose: () => set({ type: null, isOpen: false }),
-  onOpen: (type, data = {}) => set({ isOpen: true, type, data }),
+  onOpen: (type, data = undefined) =>
+    set({ isOpen: true, type, data }),
 }));
 export default useArticleStore;

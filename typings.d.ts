@@ -9,6 +9,12 @@ interface NavbarProps {
   status: "writeArticle" | "navbar";
 }
 
+interface ModalData {
+  $id?: string;
+  title?: string;
+  userId?: string;
+}
+
 interface ArticleState {
   title: string;
   setTitle: (title) => void;
@@ -18,7 +24,7 @@ interface ArticleState {
   setDescription: (description) => void;
   setPublish: (title) => void;
   type: ModalType | null;
-  data: {};
+  data: ModalData | undefined;
   isOpen: boolean;
   onOpen: (type: ModalType, data?: {}) => void;
   onClose: () => void;
@@ -73,8 +79,12 @@ interface UserTopics {
   selected: boolean;
   topic: string;
 }
-type ModalType = "writeArticle" | "editWriteArticle";
+type ModalType =
+  | "writeArticle"
+  | "editWriteArticle"
+  | "deleteArticle"
+  | "userAccountDelete";
 
 interface MembershipPlanFeatures {
-  label: string
+  label: string;
 }

@@ -33,6 +33,7 @@ const styles = {
   articleContent: `flex-[4]`,
 };
 const Recommendations = ({ user }: { user: any }) => {
+  
   const [currentArticle, setRecommendedTags, setLoading] = useArticleStore(
     (state) => [
       state.currentArticle,

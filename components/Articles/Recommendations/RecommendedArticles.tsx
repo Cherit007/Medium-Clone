@@ -47,6 +47,7 @@ function RecommendedArticles({ currentUser }: { currentUser: any }) {
         {recommendedArticles.length > 0 ? (
           recommendedArticles.map((item: ArticleProps, index: number) => {
             if (item?.$id === currentArticle?.$id) return null;
+            if (!item?.$id) return null;
             return (
               <ArticleCard
                 key={index}

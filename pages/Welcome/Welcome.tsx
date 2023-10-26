@@ -12,6 +12,7 @@ import React, { useState } from "react";
 export default function Welcome({ user }: any) {
   const [userTopics, setUserTopics] = useState<UserTopics[]>(topics);
   const [loading, setLoading] = useState<boolean>(false);
+  const [buttonState, setButtonState] = useState<boolean>(true);
   const router = useRouter();
 
   const handleAddTopics = (item: UserTopics) => {
@@ -24,6 +25,10 @@ export default function Welcome({ user }: any) {
     } else {
       setUserTopics([...userTopics, { ...item, selected: true }]);
     }
+    const data = prepareTopicsPayload(userTopics);
+    console.log(data);
+    if (data.length < 3) setButtonState(true);
+    else setButtonState(false);
   };
 
   const prepareTopicsPayload = (userTopics: UserTopics[]) => {
@@ -52,7 +57,6 @@ export default function Welcome({ user }: any) {
     router.push("/");
     setLoading(false);
   };
-
   return (
     <div className="flex flex-col justify-center items-center space-y-10 max-w-4xl mx-auto">
       <Image src={"/Logo.jpeg"} height={120} width={130} alt="logo" />
@@ -85,6 +89,7 @@ export default function Welcome({ user }: any) {
       </div>{" "}
       <Button
         onClick={handleTopic}
+        disabled={buttonState}
         className="bg-[#1A8917] cursor-pointer text-white rounded-full p-2 text-sm hover:bg-[#399c36]"
       >
         {loading && <Loader2 className="w-4 h-4 animate-spin mr-3" />}

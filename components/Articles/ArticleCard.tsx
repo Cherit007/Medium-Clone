@@ -10,14 +10,6 @@ import { BookmarkPlus, BookPlus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
 import { Separator } from "../ui/separator";
 import { useToast } from "../ui/use-toast";
 
@@ -39,10 +31,7 @@ function ArticleCard({
     setCurrentArticle,
     setSavedArticle,
     savedArticle,
-    setUserArticles,
-    setLoading,
-    setRecommendedTags,
-    setRecommendedArticle,
+    onOpen,
   ] = useArticleStore((state) => [
     state.setDescription,
     state.setTitle,
@@ -50,10 +39,7 @@ function ArticleCard({
     state.setCurrentArticle,
     state.setSavedArticle,
     state.savedArticle,
-    state.setUserArticles,
-    state.setLoading,
-    state.setRecommendedTags,
-    state.setRecommendedArticle,
+    state.onOpen,
   ]);
 
   const router = useRouter();
@@ -112,20 +98,6 @@ function ArticleCard({
     }
   };
 
-  const handleArticleDelete = async ($id: string, title: string) => {
-    console.log($id, title);
-    try {
-      const payload = {
-        id: $id,
-        title: title,
-      };
-      await axios.post("/api/delete-article", payload);
-      await fetchArticles(setLoading, setUserArticles);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const handleArticleClick = () => {
     setCurrentArticle({
       status,
@@ -138,7 +110,7 @@ function ArticleCard({
       users,
       currentUser,
     });
-    router.push(`/${users?.name}/${$id}`);
+    router.push(`/article/${users?.name}/${$id}`);
   };
 
   return (
@@ -177,18 +149,19 @@ function ArticleCard({
       )}
       <div className="space-y-2">
         <div className="flex items-center justify-between space-x-5">
-            <div
-              className="flex flex-col space-y-2 flex-1"
-              onClick={handleArticleClick}
-            >
-              <h2 className="font-bold text-[20px] ">{title}</h2>
-              <p>
-                {status === "recommended"
+          <div
+            className="flex flex-col space-y-2 flex-1"
+            onClick={handleArticleClick}
+          >
+            <h2 className="font-bold text-[20px] ">{title}</h2>
+            <p>
+              {description &&
+                (status === "recommended"
                   ? description.slice(0, 150)
-                  : description.slice(0, 400)}
-                ....
-              </p>
-            </div>{" "}
+                  : description.slice(0, 400))}
+              ....
+            </p>
+          </div>{" "}
           {articleImgUrl && status !== "recommended" && (
             <Image src={articleImgUrl} alt="image" width={80} height={50} />
           )}
@@ -238,36 +211,12 @@ function ArticleCard({
             >
               Edit
             </Button>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost">Delete</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px] bg-white">
-                <DialogHeader>
-                  <DialogTitle className="text-center">
-                    Delete Article
-                  </DialogTitle>
-                  <DialogDescription className="text-center">
-                    Deletion is not reversible, and the story will be completely
-                    deleted.
-                  </DialogDescription>
-                  <div className="text-center space-x-5">
-                    <DialogClose asChild>
-                      <Button variant="outline" className="rounded-[20px]">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      onClick={() => handleArticleDelete($id, title)}
-                      variant="outline"
-                      className="bg-[#C94A4A] text-white rounded-[20px] hover:bg-[#C94A4A] hover:text-white"
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            <Button
+              onClick={() => onOpen("deleteArticle", { $id, title })}
+              variant="ghost"
+            >
+              Delete
+            </Button>
           </div>
           <p className="bg-[#F2F2F2] rounded-[15px] text-[#242424] text-sm p-2">
             {topic}

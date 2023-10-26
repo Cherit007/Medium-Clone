@@ -72,7 +72,7 @@ const HomePage = async () => {
   let articles, hotTopicsArr;
   if (user) [articles, hotTopicsArr] = await fetchFeedArticles(user);
   return (
-    <div>
+    <>
       {!user?.$id ? (
         <Home />
       ) : (
@@ -88,7 +88,7 @@ const HomePage = async () => {
           </main>
         </>
       )}
-    </div>
+    </>
   );
 };
 
