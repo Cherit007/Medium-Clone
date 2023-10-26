@@ -67,6 +67,7 @@ const fetchFeedArticles = async (user: any) => {
 
 const HomePage = async () => {
   await redirectUser();
+  // cronSetup()
   const user = await currentProfile();
   let articles, hotTopicsArr;
   if (user) [articles, hotTopicsArr] = await fetchFeedArticles(user);

@@ -127,6 +127,17 @@ function ArticleCard({
   };
 
   const handleArticleClick = () => {
+    setCurrentArticle({
+      status,
+      title,
+      description,
+      topic,
+      articleImgUrl,
+      $createdAt,
+      $id,
+      users,
+      currentUser,
+    });
     router.push(`/${users?.name}/${$id}`);
   };
 
@@ -166,13 +177,18 @@ function ArticleCard({
       )}
       <div className="space-y-2">
         <div className="flex items-center justify-between space-x-5">
-          <div
-            className="flex flex-col space-y-2 flex-1"
-            onClick={handleArticleClick}
-          >
-            <h2 className="font-bold text-[20px] ">{title}</h2>
-            <p>{description.slice(0, 400)}....</p>
-          </div>
+            <div
+              className="flex flex-col space-y-2 flex-1"
+              onClick={handleArticleClick}
+            >
+              <h2 className="font-bold text-[20px] ">{title}</h2>
+              <p>
+                {status === "recommended"
+                  ? description.slice(0, 150)
+                  : description.slice(0, 400)}
+                ....
+              </p>
+            </div>{" "}
           {articleImgUrl && status !== "recommended" && (
             <Image src={articleImgUrl} alt="image" width={80} height={50} />
           )}

@@ -1,15 +1,6 @@
 "use client";
 import Image from "next/image";
-import {
-  PlayCircle,
-  Twitter,
-  Facebook,
-  Linkedin,
-  Link,
-  Bookmark,
-  MoreHorizontal,
-  Loader,
-} from "lucide-react";
+import { PlayCircle, Loader } from "lucide-react";
 import useArticleStore from "@/store/useArticleStore";
 import { calculateTime } from "@/lib/calculate-time";
 import { useEffect, useRef, useState } from "react";
@@ -17,8 +8,7 @@ import { database, storage } from "@/appwriteConfig";
 import { ID, Query } from "appwrite";
 import { usePathname } from "next/navigation";
 import axios from "axios";
-import { decryptText } from "@/lib/encrypt-decrypt";
-import ReactAudioPlayer from "react-audio-player";
+import { calculateArticleReadTime } from "@/lib/calculate-read-time";
 
 const styles = {
   wrapper: `flex items-center justify-center flex-[3] ml-[80px] px-10 border-l border-r`,
@@ -111,6 +101,11 @@ const ArticleMain = () => {
           audioUrl: audioFileUrl,
         }
       );
+      const payload = {
+        id: currentArticle?.$id,
+        status: "delete",
+      };
+      await axios.post("/api/text-speech", payload);
     }
   };
   const handleListenClick = async () => {
@@ -120,6 +115,7 @@ const ArticleMain = () => {
         const payload = {
           text: currentArticle?.description,
           id: currentArticle?.$id,
+          status: "add",
         };
         await axios.post("/api/text-speech", payload);
         await storeMp3DataInStorage(`/assets/${currentArticle?.$id}.mp3`);
@@ -158,8 +154,12 @@ const ArticleMain = () => {
                 <div>{currentArticle?.users?.name}</div>
                 <div className={styles.postDetails}>
                   <span>
-                    {calculateTime(currentArticle?.$createdAt as string)} • 5
-                    mins •{" "}
+                    {calculateTime(currentArticle?.$createdAt as string)} •{" "}
+                    {currentArticle?.description &&
+                      calculateArticleReadTime(
+                        currentArticle?.description || ""
+                      )}
+                    •{" "}
                   </span>
                   <div
                     onClick={handleListenClick}

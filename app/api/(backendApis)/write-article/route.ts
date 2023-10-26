@@ -35,6 +35,14 @@ export async function POST(req: Request) {
         [Query.equal("authorId", user?.userId)]
       );
 
+      const payload = {
+        recipient_email: user?.email,
+        subject: `${user?.name}, you have successfully published your article.`,
+        message: "Feel free to review and make changes to your article.",
+      };
+
+      await axios.post("http://localhost:9080/send-ack", payload);
+
       await axios.post("http://localhost:8000/add-article-elastic-search", {
         title: userDetails?.title,
         article_id: articleId,

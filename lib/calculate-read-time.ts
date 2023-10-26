@@ -1,5 +1,5 @@
 export const calculateArticleReadTime = (text: string) => {
   const words = text.split(" ");
-  const totalTime = Math.ceil((words.length * 4) / 60);
+  const totalTime = Math.ceil((words.length) / 120);
   return totalTime > 1 ? totalTime + " mins" : totalTime + " min";
 };

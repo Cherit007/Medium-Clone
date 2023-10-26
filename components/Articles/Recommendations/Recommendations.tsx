@@ -6,9 +6,10 @@ import logo from "../../../public/Logo.jpeg";
 import { useEffect, useRef, useState } from "react";
 import { fetchHashTags } from "@/controllers/fetchHashTags";
 import useArticleStore from "@/store/useArticleStore";
+import ArticleSummarization from "../ArticleSummarization";
 
 const styles = {
-  wrapper: `h-screen min-w-[10rem] sticky top-0 max-w-[30rem] flex-[1.2] p-[2rem]`,
+  wrapper: `h-screen min-w-[10rem] sticky top-0 max-w-[30rem] flex flex-col gap-y-[50px] flex-[1.2] p-[2rem]`,
   content: ``,
   accentedButton: `flex items-center justify-center text-sm bg-black text-white my-[2rem] py-[0.6rem] rounded-full`,
   searchBar: `flex items-center gap-[0.6rem] h-[2.6rem] border px-[1rem] rounded-full`,
@@ -65,19 +66,20 @@ const Recommendations = ({ user }: { user: any }) => {
   return (
     <div className={styles.wrapper}>
       {/* <div className={styles.authorContainer}> */}
-        {/* <div className={styles.authorImageContainer}>
+      {/* <div className={styles.authorImageContainer}>
           <Image src={logo} alt="DP" width={100} height={100} />
         </div> */}
-        {/* <div className={styles.authorName}>{user?.name}</div> */}
-        {/* <div className={styles.authorFollowing}>2M Followers</div>
+      {/* <div className={styles.authorName}>{user?.name}</div> */}
+      {/* <div className={styles.authorFollowing}>2M Followers</div>
         {/* <div className={styles.authorActions}> */}
-          {/* <button className={styles.actionButton}>Follow</button> */}
-          {/* <button className={styles.actionButton}> */}
-            {/* <MailPlus /> */}
-          {/* </button> */} 
-        {/* </div> */}
-        <TopicRecommendation heading={"#Topics"} />
-      </div>
+      {/* <button className={styles.actionButton}>Follow</button> */}
+      {/* <button className={styles.actionButton}> */}
+      {/* <MailPlus /> */}
+      {/* </button> */}
+      {/* </div> */}
+      <TopicRecommendation heading={"#Topics"} />
+      <ArticleSummarization />
+    </div>
     // </div>
   );
 };

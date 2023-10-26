@@ -2,7 +2,7 @@
 import { topics } from "@/constants";
 import useArticleStore from "@/store/useArticleStore";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
+import { Dialog, DialogContent } from "../ui/dialog";
 import {
   Select,
   SelectContent,
@@ -16,11 +16,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { storage } from "@/appwriteConfig";
 import { ID } from "appwrite";
 import { Loader2 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import {  useRouter } from "next/navigation";
 import { fetchArticles } from "@/controllers/fetchUserArticles";
 import { ScrollArea } from "../ui/scroll-area";
-import { encryptText } from "@/lib/encrypt-decrypt";
 import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
@@ -71,11 +69,6 @@ export const WriteArticleModal = () => {
   });
 
   const onSubmit = async () => {
-    toast({
-      variant: "destructive",
-      title: "Published this article",
-      className: "bg-[green] text-white",
-    });
     let articleImgUrl;
     if (imgUrl) {
       articleImgUrl = await storage.createFile(
@@ -89,7 +82,7 @@ export const WriteArticleModal = () => {
       topic,
       articleImgUrl,
       title,
-      description
+      description,
     };
     await fetch("/api/write-article", {
       method: "POST",
@@ -99,6 +92,11 @@ export const WriteArticleModal = () => {
       body: JSON.stringify(payload),
     }).then(async (res) => {
       const { data } = await res.json();
+      toast({
+        variant: "destructive",
+        title: "Published this article",
+        className: "bg-[green] text-white",
+      });
       setUserArticles(data);
       setTitle("");
       setDescription("");

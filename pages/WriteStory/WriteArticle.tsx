@@ -11,6 +11,17 @@ import { Atom, Image as Img, Loader2, PlusCircle, X } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+interface AIResultsProps {
+  point: string;
+  content: string;
+}
 
 function WriteArticle({
   editedDescription,
@@ -19,7 +30,7 @@ function WriteArticle({
 }: EditedArticleProps) {
   const [uploadButton, setUploadButton] = useState<boolean>(false);
   const [aiLoading, setAiLoading] = useState<boolean>(false);
-  const [aiResults, setAiResults] = useState<string[]>();
+  const [aiResults, setAiResults] = useState<AIResultsProps[]>();
   const pathname = useParams();
   const [
     img,
@@ -65,24 +76,26 @@ function WriteArticle({
   };
 
   const handleAskAi = async () => {
-    const payload = {
-      text: title,
-    };
-    setAiLoading(true);
-    await fetch("/api/ask-ai", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }).then(async (res) => {
-      const resp = await res.json();
-      setAiResults(resp.data.result);
-    });
-    setAiLoading(false);
+    if (title) {
+      const payload = {
+        text: title,
+      };
+      setAiLoading(true);
+      await fetch("/api/ask-ai", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }).then(async (res) => {
+        const resp = await res.json();
+        setAiResults(resp.data);
+      });
+      setAiLoading(false);
+    }
   };
 
   return (
     <>
       <Navbar buttonText={"Publish"} status="writeArticle" />
-      <div className="w-full flex flex-col md:flex-row justify-between mx-auto md:max-w-6xl mt-[30px] gap-20">
+      <div className="w-full flex flex-col md:flex-row justify-between mx-auto md:max-w-7xl mt-[30px] gap-20">
         <div className="h-full w-full md:[70%] col-span-7">
           {img && (
             <div className="flex justify-center">
@@ -155,11 +168,14 @@ function WriteArticle({
             ></textarea>
           </div>
         </div>
-        <div className="bg-[#F2F2F2] w-[80%] mx-auto md:w-[30%] flex flex-auto p-3 justify-center  rounded-[20px]">
+        <div className="bg-[#F2F2F2] w-[80%] mx-auto md:w-[38%] flex flex-auto p-3 justify-center  rounded-[20px]">
           <div className="flex flex-col text-semibold justify-around">
             <div className="flex text-center">
-              <Atom className="w-6 h-6 text-[#4092b3] animate-spin" />
-              <p> Ask Chat-GPT to summarize your article</p>
+              <img
+                src="/askai.gif"
+                className="w-10 h-10 rounded-[20px] mx-auto"
+              />
+              <p> Ask Chat-GPT to organize your article</p>
             </div>
             <ul className="mt-5">
               {aiLoading ? (
@@ -170,29 +186,46 @@ function WriteArticle({
                   </p>
                 </>
               ) : !!aiResults ? (
-                aiResults.map((point, index) => {
-                  return <li key={index}>{point}</li>;
-                })
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full max-h-[400px] overflow-auto"
+                >
+                  {aiResults.map((point, index) => {
+                    return (
+                      <AccordionItem key={index} value={point?.point}>
+                        <AccordionTrigger className="text-start no-underline">
+                          {point?.point}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          {point?.content.substring(4)}
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
               ) : (
-                <div className="flex flex-col text-[#6B6B6B]">
-                  <p>
-                    {" "}
-                    -{`>`} You can say 'help' at any time if you need
-                    assistance.
-                  </p>
-                  <p>
-                    -{`> `}
+                <ul className="text-[#6B6B6B] list-disc">
+                  <li>
+                    You can say 'help' at any time if you need assistance.
+                  </li>
+                  <li>
                     Enter the title of the article you'd like me to summarize
-                  </p>
-                </div>
+                  </li>
+                </ul>
               )}
             </ul>
             <div className="flex flex-col">
-              {!aiLoading && <p className="text-center mx-auto font-bold max-w-[200px] break-words">{title}</p>}
+              {!aiLoading && (
+                <p className="text-center mx-auto font-bold max-w-[200px] break-words">
+                  {title}
+                </p>
+              )}
               <Button
                 onClick={handleAskAi}
                 variant="outline"
                 className="rounded-full mt-5"
+                disabled={aiLoading || title.length<2}
               >
                 {aiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Ask
@@ -205,6 +238,5 @@ function WriteArticle({
   );
 }
 
-export const getStaticProps = () => {};
 
 export default WriteArticle;

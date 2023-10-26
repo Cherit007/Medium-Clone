@@ -9,16 +9,17 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 
 function AuthorStories() {
-  const [setUserArticles, userArticles, loading, setLoading] = useArticleStore(
+  const [setUserArticles, userArticles, loading, setLoading,recommendedTags] = useArticleStore(
     (state) => [
       state.setUserArticles,
       state.userArticles,
       state.loading,
       state.setLoading,
+      state.recommendedTags
     ]
   );
   useEffect(() => {
-    fetchArticles(setLoading, setUserArticles );
+    fetchArticles(setLoading, setUserArticles);
   }, []);
   return (
     <>
@@ -38,7 +39,7 @@ function AuthorStories() {
             </Link>
           </div>
           {/* <div className="flex items-center h-[50vh] justify-center"> */}
-          {!!userArticles ? (
+          {userArticles && userArticles?.length > 0 ? (
             userArticles.map((item: ArticleProps) => {
               return (
                 <div className="border-b-2 border-gray-100 mb-2">

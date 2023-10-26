@@ -99,7 +99,6 @@ function ProfilePage({ currentUser }: any) {
         (state) => [
             state.savedArticle,
             state.setSavedArticle,
-            state.setRecommendedTags,
         ]
     );
 

@@ -1,14 +1,14 @@
 version: '3.5'
 services:
-  web-app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./:/app
-    command: npm run dev
+  # web-app:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./:/app
+  #   command: npm run dev
 
   hash-tag:
     image: saidhanush7/hashtag:0.0.1.RELEASE
@@ -39,6 +39,11 @@ services:
     image: saidhanush7/text-to-speech:0.0.1.RELEASE
     ports:
       - "9090:9090"
+  
+  summarize-ai:
+    image: saidhanush7/summarizeai:0.0.1.RELEASE
+    ports:
+      - "9070:9070"
   
 
   
