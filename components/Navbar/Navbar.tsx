@@ -215,10 +215,12 @@ function Navbar({ buttonText, status }: NavbarProps) {
                     Settings
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>
-                  <Sparkles className="w-6 h-6 mr-2 text-[#6B6B6B]" />
-                  Become a member
-                </DropdownMenuItem>
+                <Link href={"/plans"}>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Sparkles className="w-6 h-6 mr-2 text-[#6B6B6B]" />
+                    Become a member
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => signOut()}
