@@ -5,8 +5,32 @@ import Navbar from "@/components/Navbar/Navbar";
 import { currentProfile } from "@/lib/current-profile";
 import { decryptText } from "@/lib/encrypt-decrypt";
 import { redirectUser } from "@/lib/redirect-user";
+import UserFeed from "@/pages/Feed/UserFeed";
 import Home from "@/pages/home";
 import { Query } from "appwrite";
+
+const fetchPaymentDetails = async (user: any) => {
+  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  let session;
+  if (user.payment_session_id) {
+    session = await stripe.checkout.sessions.retrieve(user.payment_session_id);
+  }
+  else {
+    session = { payment_status: 'unpaid' }
+  }
+  return session.payment_status;
+}
+
+const updatePaymentStatus = async (user: any) => {
+  await database.updateDocument(
+    "651d2c31d4f6223e24e2",
+    "65219b9e7c62b9078824",
+    user?.$id,
+    {
+      is_member: true
+    }
+  );
+}
 
 const fetchFeedArticles = async (user: any) => {
   let articles: ArticleProps[] = [];
@@ -69,24 +93,25 @@ const HomePage = async () => {
   await redirectUser();
   // cronSetup()
   const user = await currentProfile();
-  let articles, hotTopicsArr;
-  if (user) [articles, hotTopicsArr] = await fetchFeedArticles(user);
+  let feedForUser, paymentDetails, currentUser;
+  currentUser = user;
+  if (user) {
+    feedForUser = await fetchFeedArticles(user);
+    if (user.payment_session_id) {
+      paymentDetails = await fetchPaymentDetails(user);
+      if (paymentDetails === 'paid') {
+        await updatePaymentStatus(user);
+        // currentUser = await currentProfile();
+        user.is_member = true
+      }
+    }
+  }
   return (
     <>
       {!user?.$id ? (
         <Home />
       ) : (
-        <>
-          <Navbar buttonText="Write" status="navbar" />
-          <main className="w-full grid grid-cols-3 max-w-6xl mx-auto">
-            <div className="col-span-3 md:col-span-2 mt-1 p-5">
-              <ArticleFeed articles={articles} currentUser={user} />
-            </div>
-            <div className="hidden md:flex col-span-1 sticky top-[100px] h-screen overflow-auto no-scrollbar">
-              <SideBarFeed hotTopicsArr={hotTopicsArr} currentUser={user} />
-            </div>
-          </main>
-        </>
+        <UserFeed user={currentUser} feedForUser={feedForUser} secret_key={process.env.STRIPE_SECRET_KEY} />
       )}
     </>
   );
