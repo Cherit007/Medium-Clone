@@ -10,7 +10,7 @@ const Article = async () => {
     <div className="flex flex-col">
       <Navbar buttonText="Write" status="navbar" />
       <div className="flex flex-grow h-full">
-        <ArticleMain />
+        <ArticleMain user={user}/>
         <Recommendations user={user} />
       </div>
       <RecommendedArticles currentUser={user} />

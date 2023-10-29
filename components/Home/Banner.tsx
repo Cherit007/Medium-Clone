@@ -17,7 +17,7 @@ const Banner = () => {
         </div>
         <Image
             className='hidden h-32 md:inline-flex object-contain flex-1'
-            src={Logo}
+            src={"/Logo.jpeg"}
             width={500}
             height={400}
             alt="banner"

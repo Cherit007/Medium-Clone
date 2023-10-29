@@ -1,6 +1,6 @@
 import { currentProfile } from "@/lib/current-profile";
-import MembershipNotFoundPage from "@/pages/Membership/MembershipNotFound";
-import MembershipUnSuccessfullPage from "@/pages/Membership/MembershipUnsuccessfullPage";
+import MembershipNotFoundPage from "@/pagesfolder/Membership/MembershipNotFound";
+import MembershipUnSuccessfullPage from "@/pagesfolder/Membership/MembershipUnsuccessfullPage";
 import { Loader } from "lucide-react";
 import React, { Suspense } from "react";
 

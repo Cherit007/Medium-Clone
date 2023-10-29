@@ -1,5 +1,5 @@
 import { currentProfile } from "@/lib/current-profile";
-import Welcome from "@/pages/Welcome/Welcome";
+import Welcome from "@/pagesfolder/Welcome/Welcome";
 
 const WelcomePage = async () => {
   const user = await currentProfile();

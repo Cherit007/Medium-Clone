@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 import useArticleStore from "@/store/useArticleStore";
-import { Atom, Image as Img, Loader2, Lock, PlusCircle, X } from "lucide-react";
+import { Image as Img, Loader2, Lock, PlusCircle, X } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
@@ -28,6 +28,7 @@ function WriteArticle({
   editedDescription,
   editedTitle,
   editedArticleImgUrl,
+  user,
 }: EditedArticleProps) {
   const [uploadButton, setUploadButton] = useState<boolean>(false);
   const [aiLoading, setAiLoading] = useState<boolean>(false);
@@ -62,19 +63,18 @@ function WriteArticle({
       setDescription(editedDescription);
       setImg(editedArticleImgUrl);
     }
-    async () => {
-      const currentUser: any = await currentProfile();
-      if (currentUser.is_member === true) {
-        setIsMember(true);
-      }
+    if (user.is_member === true) {
+      setIsMember(true);
     }
   }, []);
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setImgUrl(e.target.files[0]);
-    setImg(URL.createObjectURL(e.target.files[0]));
-    setUploadButton(false);
+    if (e.target.files) {
+      setImgUrl(e.target.files[0]);
+      setImg(URL.createObjectURL(e.target.files[0]));
+      setUploadButton(false);
+    }
   };
 
   const handleTitleValidation = (val: string) => {
@@ -84,7 +84,7 @@ function WriteArticle({
   };
   const handleAskAiNotMember = () => {
     window.location.href = "/plans";
-  }
+  };
   const handleAskAi = async () => {
     if (title) {
       const payload = {
@@ -231,28 +231,33 @@ function WriteArticle({
                   {title}
                 </p>
               )}
-              {isMember &&
+              {isMember && (
                 <Button
                   onClick={handleAskAi}
                   variant="outline"
                   className="rounded-full mt-5"
                   disabled={aiLoading || title.length < 2}
                 >
-                  {aiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {aiLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Ask
-                </Button>}
+                </Button>
+              )}
 
-              {!isMember &&
+              {!isMember && (
                 <Button
                   onClick={handleAskAiNotMember}
                   variant="outline"
                   className="rounded-full mt-5"
                   disabled={aiLoading || title.length < 2}
                 >
-                  {aiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {aiLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   <span className="mr-2">Ask</span> <Lock />
-                </Button>}
-
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -260,6 +265,5 @@ function WriteArticle({
     </>
   );
 }
-
 
 export default WriteArticle;

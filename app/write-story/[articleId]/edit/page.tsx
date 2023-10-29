@@ -1,5 +1,6 @@
 import { database, storage } from "@/appwriteConfig";
-import WriteArticle from "@/pages/WriteStory/WriteArticle";
+import { currentProfile } from "@/lib/current-profile";
+import WriteArticle from "@/pagesfolder/WriteStory/WriteArticle";
 import { Query } from "appwrite";
 import React from "react";
 
@@ -33,8 +34,10 @@ const fetchEditedArticle = async (params: Props) => {
 
 export default async function page(params: Props) {
   const articles = await fetchEditedArticle(params);
+  const user = await currentProfile();
   return (
     <WriteArticle
+      user={user}
       editedDescription={articles[0]?.description}
       editedTitle={articles[0]?.title}
       editedArticleImgUrl={articles[0]?.articleImgUrl}

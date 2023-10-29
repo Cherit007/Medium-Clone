@@ -1,7 +1,7 @@
 import SideBarFeed from "@/components/Articles/SideBarFeed";
 import Navbar from "@/components/Navbar/Navbar";
 import { currentProfile } from "@/lib/current-profile";
-import AuthorStories from "@/pages/Stories/AuthorStories";
+import AuthorStories from "@/pagesfolder/Stories/AuthorStories";
 import React, { Suspense } from "react";
 import { Loader } from "lucide-react";
 

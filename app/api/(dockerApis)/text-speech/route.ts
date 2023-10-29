@@ -10,10 +10,12 @@ export async function POST(req: Request) {
     if (!user) return new NextResponse("User not found", { status: 401 });
 
     const payload = await req.json();
-
+    const baseUrl = process.env.NEXT_PROD_MODE==="true"
+    ? "text-to-speech"
+    : process.env.NEXT_PUBLIC_API_BASE_URL;
     if (payload?.status === "add") {
       const res = await axios.post(
-        "http://text-speech:9090/text-to-speech",
+        `http://${baseUrl}:9090/text-to-speech`,
         {
           text: payload?.text,
         },

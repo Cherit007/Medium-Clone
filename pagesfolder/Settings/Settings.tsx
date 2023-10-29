@@ -2,7 +2,7 @@
 import Navbar from "@/components/Navbar/Navbar";
 import { Button } from "@/components/ui/button";
 import useArticleStore from "@/store/useArticleStore";
-import { CornerDownRight, MoveUpRight } from "lucide-react";
+import { MoveUpRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 

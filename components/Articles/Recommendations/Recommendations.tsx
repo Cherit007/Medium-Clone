@@ -79,7 +79,7 @@ const Recommendations = ({ user }: { user: any }) => {
       {/* </button> */}
       {/* </div> */}
       <TopicRecommendation heading={"#Topics"} />
-      <ArticleSummarization />
+      <ArticleSummarization user={user} />
     </div>
     // </div>
   );

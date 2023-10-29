@@ -1,5 +1,5 @@
 import { currentProfile } from "@/lib/current-profile";
-import RegisterPage from "@/pages/Register/RegisterPage";
+import RegisterPage from "@/pagesfolder/Register/RegisterPage";
 
 async function page() {
   const user = await currentProfile();

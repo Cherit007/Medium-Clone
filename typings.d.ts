@@ -73,6 +73,7 @@ interface EditedArticleProps {
   editedTitle?: string;
   editedDescription?: string;
   editedArticleImgUrl?: string | StaticImport;
+  user: any;
 }
 
 interface UserTopics {

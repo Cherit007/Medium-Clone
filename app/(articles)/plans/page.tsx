@@ -1,5 +1,5 @@
 import { currentProfile } from "@/lib/current-profile";
-import MembershipPage from "@/pages/Membership/MembershipPage";
+import MembershipPage from "@/pagesfolder/Membership/MembershipPage";
 import { Loader } from "lucide-react";
 import React, { Suspense } from "react";
 

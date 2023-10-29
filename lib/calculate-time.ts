@@ -1,9 +1,15 @@
+interface timeFormatProps {
+  hour: string;
+  minute: string;
+}
+
+
 export const calculateTime = (inputDateStr:string) => {
     // Assuming the input date string is in UTC format
-    const inputDate = new Date(inputDateStr);
+    const inputDate = new Date(inputDateStr) as any;
   
     // Get current date
-    const currentDate = new Date();
+    const currentDate = new Date() as any;
   
     // Set up date formats
     const timeFormat = { hour: "numeric", minute: "numeric" };
@@ -20,7 +26,7 @@ export const calculateTime = (inputDateStr:string) => {
       inputDate.getUTCFullYear() === currentDate.getUTCFullYear()
     ) {
       // Today: Convert to AM/PM format
-      const ampmTime = inputDate.toLocaleTimeString("en-US", timeFormat);
+      const ampmTime = inputDate.toLocaleTimeString("en-US", timeFormat as any );
       return ampmTime;
     } else if (
       inputDate.getUTCDate() === currentDate.getUTCDate() - 1 &&

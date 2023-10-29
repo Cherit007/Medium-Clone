@@ -28,7 +28,7 @@ const styles = {
   subtitle: `font-mediumSerifItalic text-[1.4rem] text-[#292929] font-semibold`,
   articleText: `font-mediumSerif text-[1.4rem] text-[#292929] h-full`,
 };
-const ArticleMain = () => {
+const ArticleMain = ({ user }: { user: any }) => {
   const [currentArticle, setCurrentArticle, setLoading, loading] =
     useArticleStore((state) => [
       state.currentArticle,
@@ -49,20 +49,16 @@ const ArticleMain = () => {
 
   const handleListenClickForNonMember = async () => {
     window.location.href = "/plans";
-  }
+  };
 
   useEffect(() => {
-    async () => {
-      const currentUser: any = await currentProfile();
-      if (currentUser.is_member === true) {
-        setIsMember(true);
-      }
-    }
-
     const fetchArticle = async () => {
       if (callApi.current) {
         callApi.current = false;
         setLoading(true);
+        if (user.is_member === true) {
+          setIsMember(true);
+        }
         const res = await database.listDocuments(
           "651d2c31d4f6223e24e2",
           "651d2c5fca0e679e84a7",
@@ -205,17 +201,20 @@ const ArticleMain = () => {
                       />
                     )}
                   </div>
-                  <div className={styles.listenButton} onClick={handleListenClickForNonMember}>
+                  <div
+                    className={styles.listenButton}
+                    onClick={handleListenClickForNonMember}
+                  >
                     {/* <Link href="/plans"> */}
-                      {!isMember && (
-                        <>
-                            <PlayCircle
-                              className={`${audioEnable && "animate-ping"}`}
-                            />
-                          <span> Listen</span>
-                          <Lock/>
-                        </>
-                      )}
+                    {!isMember && (
+                      <>
+                        <PlayCircle
+                          className={`${audioEnable && "animate-ping"}`}
+                        />
+                        <span> Listen</span>
+                        <Lock />
+                      </>
+                    )}
                     {/* </Link> */}
                   </div>
                 </div>

@@ -9,8 +9,12 @@ export async function POST(req: Request) {
     const user = await currentProfile();
     if (!user) return new NextResponse("User not found", { status: 401 });
     const payload = await req.json();
+    const { NEXT_PUBLIC_API_BASE_URL, NEXT_PROD_MODE } = process.env;
 
-    const res = await axios.post("http://recommendations:9000/get-recommendations", {
+    const baseUrl =
+      NEXT_PROD_MODE === "true" ? "recommendations" : NEXT_PUBLIC_API_BASE_URL;
+
+    const res = await axios.post(`http://${baseUrl}:9000/get-recommendations`, {
       article_name: "Securing Your Web Applications: Best Practices",
     });
     const articles = res.data.recommendations;

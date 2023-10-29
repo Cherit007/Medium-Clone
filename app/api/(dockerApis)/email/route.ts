@@ -17,7 +17,11 @@ export async function POST(req: Request) {
         signUpStatus: "welcome",
       }
     );
-    const res = await axios.post("http://mail-service:9080/send-ack", {
+    const baseUrl = process.env.NEXT_PROD_MODE ==="true"
+    ? "mail-service"
+    : process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    const res = await axios.post(`http://${baseUrl}:9080/send-ack`, {
       recipient_email: payload?.recipient_email,
       subject: payload?.subject,
       message: payload?.message,

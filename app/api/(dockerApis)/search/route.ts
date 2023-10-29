@@ -8,8 +8,11 @@ export async function POST(req: Request) {
     if (!user) return new NextResponse("User not found", { status: 401 });
 
     const userDetails = await req.json();
-
-    const res = await axios.post("http://search-engine:8000/search", userDetails);
+    const baseUrl =
+      process.env.NEXT_PROD_MODE === "true"
+        ? "search-engine"
+        : process.env.NEXT_PUBLIC_API_BASE_URL;
+    const res = await axios.post(`http://${baseUrl}:8000/search`, userDetails);
 
     return NextResponse.json({ data: res.data });
   } catch (e) {

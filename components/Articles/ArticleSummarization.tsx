@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { currentProfile } from "@/lib/current-profile";
 import Link from "next/link";
 
-function ArticleSummarization() {
+function ArticleSummarization({ user }: { user: any }) {
   const [currentArticle] = useArticleStore((state) => [state.currentArticle]);
   const [summarizedData, setSummarizedData] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -15,7 +15,7 @@ function ArticleSummarization() {
 
   const handleArticleSummarizeForNonMember = async () => {
     window.location.href = "/plans";
-  }
+  };
 
   const handleArticleSummarize = async () => {
     if (
@@ -29,15 +29,15 @@ function ArticleSummarization() {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
-    async () => {
-      const currentUser: any = await currentProfile();
-      if (currentUser.is_member === true) {
+    const getMembershipStatus = () => {
+      console.log(user);
+      if (user.is_member === true) {
         setIsMember(true);
       }
-    }
-
+    };
+    getMembershipStatus();
   }, []);
 
   return (
@@ -60,11 +60,12 @@ function ArticleSummarization() {
           </li>
           <li>
             For the best results, make sure the article is well-structured and
-            free of unnecessary information and atleast 250 characters in length.
+            free of unnecessary information and atleast 250 characters in
+            length.
           </li>
         </ul>
       )}
-      {(!summarizedData && isMember) && (
+      {!summarizedData && isMember && (
         <Button
           onClick={handleArticleSummarize}
           variant="outline"
@@ -76,9 +77,9 @@ function ArticleSummarization() {
         </Button>
       )}
 
-      {(!summarizedData && !isMember) && (
+      {!summarizedData && !isMember && (
         <Button
-        onClick={handleArticleSummarizeForNonMember}
+          onClick={handleArticleSummarizeForNonMember}
           variant="outline"
           className="rounded-[10px] w-[50%]"
           disabled={loading}

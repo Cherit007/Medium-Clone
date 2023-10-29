@@ -1,5 +1,5 @@
 import { currentProfile } from "@/lib/current-profile";
-import Settings from "@/pages/Settings/Settings";
+import Settings from "@/pagesfolder/Settings/Settings";
 import React from "react";
 
 export default async function page() {
