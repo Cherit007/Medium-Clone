@@ -2,24 +2,18 @@
 import ArticleFeed from "@/components/Articles/ArticleFeed";
 import SideBarFeed from "@/components/Articles/SideBarFeed";
 import Navbar from "@/components/Navbar/Navbar";
-import { currentProfile } from "@/lib/current-profile";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 // function ProfilePage({ currentUser }: any)
 
-async function paymentCheck(secret_key:any, payment_session_id:any) {
-    const stripe = require('stripe')(secret_key);
-    const session = await stripe.checkout.sessions.retrieve(payment_session_id);
-    return session.payment_status;
-}
 function UserFeed(props: any) {
     const router = useRouter();
     const [noSuccessorCanceledParamsInURL, setnoSuccessorCanceledParamsInURL] = useState(false);
 
     useEffect(() => {
         const currentUrl = window.location.href
-        if (currentUrl === 'http://localhost:3000/?success=true' || currentUrl === 'http://localhost:3000/?cancelled=true') {
+        if (currentUrl === `${props.app_url}`+'/?success=true' || currentUrl === `${props.app_url}`+'/?cancelled=true') {
 
             const urlSearchParams = new URLSearchParams(window.location.search);
             const successParam = urlSearchParams.get('success');

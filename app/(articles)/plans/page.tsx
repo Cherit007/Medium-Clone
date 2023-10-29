@@ -16,7 +16,7 @@ async function Membership() {
               </p>
             }
           >
-            <MembershipPage currentUser = {user} keys = {[secret_key, price_id]}/>
+            <MembershipPage currentUser = {user} keys = {[secret_key, price_id]} app_url = {process.env.NEXT_PUBLIC_BASE_URL}/>
           </Suspense>
         </>
     );

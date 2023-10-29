@@ -1,14 +1,22 @@
 "use client";
 import useArticleStore from "@/store/useArticleStore";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
+import { Loader2, Lock } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { currentProfile } from "@/lib/current-profile";
+import Link from "next/link";
 
 function ArticleSummarization() {
   const [currentArticle] = useArticleStore((state) => [state.currentArticle]);
   const [summarizedData, setSummarizedData] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isMember, setIsMember] = useState(false);
+
+  const handleArticleSummarizeForNonMember = async () => {
+    window.location.href = "/plans";
+  }
+
   const handleArticleSummarize = async () => {
     if (
       currentArticle?.description &&
@@ -21,6 +29,16 @@ function ArticleSummarization() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    async () => {
+      const currentUser: any = await currentProfile();
+      if (currentUser.is_member === true) {
+        setIsMember(true);
+      }
+    }
+
+  }, []);
 
   return (
     <div className="flex flex-col bg-[#F2F2F2] rounded-[20px] p-4 gap-y-2 items-center min-h-[200px] overflow-auto justify-between">
@@ -42,11 +60,11 @@ function ArticleSummarization() {
           </li>
           <li>
             For the best results, make sure the article is well-structured and
-            free of unnecessary information.
+            free of unnecessary information and atleast 250 characters in length.
           </li>
         </ul>
       )}
-      {!summarizedData && (
+      {(!summarizedData && isMember) && (
         <Button
           onClick={handleArticleSummarize}
           variant="outline"
@@ -55,6 +73,18 @@ function ArticleSummarization() {
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Summarize
+        </Button>
+      )}
+
+      {(!summarizedData && !isMember) && (
+        <Button
+        onClick={handleArticleSummarizeForNonMember}
+          variant="outline"
+          className="rounded-[10px] w-[50%]"
+          disabled={loading}
+        >
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <span className="mr-2">Summarize</span> <Lock />
         </Button>
       )}
     </div>

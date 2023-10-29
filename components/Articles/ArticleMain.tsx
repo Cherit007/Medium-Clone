@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { PlayCircle, Loader } from "lucide-react";
+import { PlayCircle, Loader, Lock } from "lucide-react";
 import useArticleStore from "@/store/useArticleStore";
 import { calculateTime } from "@/lib/calculate-time";
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +9,7 @@ import { ID, Query } from "appwrite";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 import { calculateArticleReadTime } from "@/lib/calculate-read-time";
+import { currentProfile } from "@/lib/current-profile";
 
 const styles = {
   wrapper: `flex items-center justify-center flex-[3] ml-[80px] px-10 border-l border-r`,
@@ -35,6 +36,7 @@ const ArticleMain = () => {
       state.setLoading,
       state.loading,
     ]);
+  const [isMember, setIsMember] = useState(false);
   const callApi = useRef(true);
 
   const [audioDataLocation, setAudioDataLocation] = useState<any>();
@@ -44,7 +46,19 @@ const ArticleMain = () => {
 
   const pathname = usePathname();
   const articleId = pathname?.split("/").pop() as string;
+
+  const handleListenClickForNonMember = async () => {
+    window.location.href = "/plans";
+  }
+
   useEffect(() => {
+    async () => {
+      const currentUser: any = await currentProfile();
+      if (currentUser.is_member === true) {
+        setIsMember(true);
+      }
+    }
+
     const fetchArticle = async () => {
       if (callApi.current) {
         callApi.current = false;
@@ -165,7 +179,7 @@ const ArticleMain = () => {
                     onClick={handleListenClick}
                     className={styles.listenButton}
                   >
-                    {audioEnable && !showAudioBar ? (
+                    {audioEnable && !showAudioBar && isMember ? (
                       <p className="flex justify-between items-center gap-x-10 ">
                         Converting to speech...
                         <img
@@ -173,7 +187,7 @@ const ArticleMain = () => {
                           className="w-10 h-10 animate-bounce"
                         />
                       </p>
-                    ) : !audioEnable && !showAudioBar ? (
+                    ) : !audioEnable && !showAudioBar && isMember ? (
                       <>
                         <PlayCircle
                           className={`${audioEnable && "animate-ping"}`}
@@ -190,6 +204,19 @@ const ArticleMain = () => {
                         className="w-40"
                       />
                     )}
+                  </div>
+                  <div className={styles.listenButton} onClick={handleListenClickForNonMember}>
+                    {/* <Link href="/plans"> */}
+                      {!isMember && (
+                        <>
+                            <PlayCircle
+                              className={`${audioEnable && "animate-ping"}`}
+                            />
+                          <span> Listen</span>
+                          <Lock/>
+                        </>
+                      )}
+                    {/* </Link> */}
                   </div>
                 </div>
               </div>

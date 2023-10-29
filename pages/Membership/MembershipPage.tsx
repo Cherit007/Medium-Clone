@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import { database, storage } from "@/appwriteConfig";
 import { planFeatures, membershipPrice } from "@/constants";
 import Navbar from "@/components/Navbar/Navbar";
-import { checkout } from "./checkout";
+import { checkout } from "../../controllers/StripeCheckout";
 
-async function PaymentPage(currentUser: any, keys: any) {
+async function PaymentPage(currentUser: any, keys: any, app_url:any) {
     if (currentUser.is_member === true) {
         window.location.href = "/";
     }
     else {
-        const paymentStatus: any = await checkout(keys[0], keys[1]);
+        const paymentStatus: any = await checkout(keys[0], keys[1], app_url);
         await database.updateDocument(
             "651d2c31d4f6223e24e2",
             "65219b9e7c62b9078824",
@@ -57,7 +57,7 @@ function MembershipPage(props: any) {
                     </ul>
                     {/* <Link href="/payment"> */}
                     <button type="button" className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center" onClick={(() => {
-                        PaymentPage(props.currentUser, props.keys)
+                        PaymentPage(props.currentUser, props.keys, props.app_url)
                     })}>{buttonText}</button>
                     {/* </Link> */}
                 </div>
