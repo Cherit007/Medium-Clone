@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     const payload = await req.json();
     console.log(payload)
-    const res = await axios.post("http://localhost:9070/summarize", payload);
+    const res = await axios.post("http://summarize-ai:9070/summarize", payload);
 
     return NextResponse.json({ data: res.data });
   } catch (e) {

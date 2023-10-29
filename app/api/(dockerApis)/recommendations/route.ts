@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     if (!user) return new NextResponse("User not found", { status: 401 });
     const payload = await req.json();
 
-    const res = await axios.post("http://localhost:9000/get-recommendations", {
+    const res = await axios.post("http://recommendations:9000/get-recommendations", {
       article_name: "Securing Your Web Applications: Best Practices",
     });
     const articles = res.data.recommendations;

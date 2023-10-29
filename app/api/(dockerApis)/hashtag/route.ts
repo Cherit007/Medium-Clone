@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     if (!user)
       return new NextResponse("User not found", { status: 401 });
     const payload = await req.json();
-    const res = await axios.post("http://localhost:6000/tag", payload);
+    const res = await axios.post("http://hash-tag:6000/tag", payload);
     return NextResponse.json({ data: res.data });
   } catch (e) {
     // console.log("AUTH FAILED", e);

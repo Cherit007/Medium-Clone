@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return new NextResponse("User not found", { status: 401 });
 
     const userDetails = await req.json();
-    const res = await axios.post("http://localhost:7001/ask-ai", userDetails);
+    const res = await axios.post("http://ask-ai:7001/ask-ai", userDetails);
 
     return NextResponse.json({ data: res.data });
   } catch (e) {

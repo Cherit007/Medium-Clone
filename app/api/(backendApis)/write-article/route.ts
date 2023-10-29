@@ -41,14 +41,14 @@ export async function POST(req: Request) {
         message: "Feel free to review and make changes to your article.",
       };
 
-      await axios.post("http://localhost:9080/send-ack", payload);
+      await axios.post("http://mail-service:9080/send-ack", payload);
 
-      await axios.post("http://localhost:8000/add-article-elastic-search", {
+      await axios.post("http://search-engine:8000/add-article-elastic-search", {
         title: userDetails?.title,
         article_id: articleId,
       });
 
-      await axios.post("http://localhost:9000/add-to-recommendations", {
+      await axios.post("http://recommendations:9000/add-to-recommendations", {
         article_name_to_add: userDetails?.title,
       });
 

@@ -1,13 +1,11 @@
 "use client";
 import { database } from "@/appwriteConfig";
-import { fetchArticles } from "@/controllers/fetchUserArticles";
 import { calculateArticleReadTime } from "@/lib/calculate-read-time";
 import { calculateTime } from "@/lib/calculate-time";
 import useArticleStore from "@/store/useArticleStore";
-import { DialogClose } from "@radix-ui/react-dialog";
-import axios from "axios";
 import { BookmarkPlus, BookPlus } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
@@ -110,7 +108,7 @@ function ArticleCard({
       users,
       currentUser,
     });
-    router.push(`/article/${users?.name}/${$id}`);
+    // router.push(`/article/${users?.name}/${$id}`);
   };
 
   return (
@@ -149,19 +147,22 @@ function ArticleCard({
       )}
       <div className="space-y-2">
         <div className="flex items-center justify-between space-x-5">
-          <div
-            className="flex flex-col space-y-2 flex-1"
-            onClick={handleArticleClick}
-          >
-            <h2 className="font-bold text-[20px] ">{title}</h2>
-            <p>
-              {description &&
-                (status === "recommended"
-                  ? description.slice(0, 150)
-                  : description.slice(0, 400))}
-              ....
-            </p>
-          </div>{" "}
+          <Link href={`/article/${users?.name}/${$id}`} prefetch>
+            {" "}
+            <div
+              className="flex flex-col space-y-2 flex-1"
+              onClick={handleArticleClick}
+            >
+              <h2 className="font-bold text-[20px] ">{title}</h2>
+              <p>
+                {description &&
+                  (status === "recommended"
+                    ? description.slice(0, 150)
+                    : description.slice(0, 400))}
+                ....
+              </p>
+            </div>{" "}
+          </Link>
           {articleImgUrl && status !== "recommended" && (
             <Image src={articleImgUrl} alt="image" width={80} height={50} />
           )}

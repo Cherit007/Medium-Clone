@@ -27,7 +27,7 @@ const Header = () => {
           />
         </div>
         <div className={styles.bannerNav}>
-          <Link href="/sign-in">
+          <Link href="/sign-in" prefetch>
             {" "}
             <Button variant="default">Sign in/Register</Button>
           </Link>

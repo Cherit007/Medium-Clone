@@ -20,7 +20,7 @@ const styles = {
 }
 const PostCard = () => {
   return (
-    <Link href={`/varun/123`}>
+    <Link href={`/varun/123`} prefetch>
     <div className={styles.wrapper}>
       <div className={styles.postDetails}>
         <div className={styles.authorContainer}>

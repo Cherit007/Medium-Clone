@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     const userDetails = await req.json();
 
-    const res = await axios.post("http://localhost:8000/search", userDetails);
+    const res = await axios.post("http://search-engine:8000/search", userDetails);
 
     return NextResponse.json({ data: res.data });
   } catch (e) {

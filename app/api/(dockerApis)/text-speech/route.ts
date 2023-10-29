@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     if (payload?.status === "add") {
       const res = await axios.post(
-        "http://localhost:9090/text-to-speech",
+        "http://text-speech:9090/text-to-speech",
         {
           text: payload?.text,
         },

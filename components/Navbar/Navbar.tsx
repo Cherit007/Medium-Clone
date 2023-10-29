@@ -30,9 +30,9 @@ import axios from "axios";
 import useDebounceInput from "@/hooks/useDebounceInput";
 
 function Navbar({ buttonText, status }: NavbarProps) {
+  const router = useRouter();
   const { signOut } = useClerk();
   const { userId } = useAuth();
-  const router = useRouter();
   const pathname = usePathname();
   const [searchList, setSearchList] = useState<any>();
   const [searchValue, setSearchValue] = useState<string>("");
@@ -119,7 +119,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
     >
       <div className="flex ml-6 items-center">
         <div className="flex items-center">
-          <Link href={"/"}>
+          <Link href={"/"} prefetch>
             <Image
               src={"/Logo.jpeg"}
               alt="logo"
@@ -146,7 +146,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
                 {!!searchList &&
                   searchList.map((item: any, index: number) => {
                     return (
-                      <Link href={`/${index}/${item?.article_id}`}>
+                      <Link href={`/article/${index}/${item?.article_id}`} prefetch>
                         <p
                           className="text-black bg-red p-3 cursor-pointer rounded-[20px] hover:bg-[#eceaea]"
                           key={index}
@@ -196,26 +196,26 @@ function Navbar({ buttonText, status }: NavbarProps) {
                   My Account
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <Link href={"/me/profile"}>
+                <Link href={"/me/profile"} prefetch>
                   <DropdownMenuItem className="cursor-pointer">
                     <User2 className="w-6 h-6 mr-2 text-[#6B6B6B]" />
                     Profile
                   </DropdownMenuItem>
                 </Link>
-                <Link href={"/me/stories"}>
+                <Link href={"/me/stories"} prefetch>
                   {" "}
                   <DropdownMenuItem className="cursor-pointer">
                     <Scroll className="w-6 h-6 mr-2 text-[#6B6B6B]" />
                     Stories
                   </DropdownMenuItem>
                 </Link>
-                <Link href={"/me/settings"}>
+                <Link href={"/me/settings"} prefetch>
                   <DropdownMenuItem className="cursor-pointer">
                     <Settings className="w-6 h-6 mr-2 text-[#6B6B6B]" />
                     Settings
                   </DropdownMenuItem>
                 </Link>
-                <Link href={"/plans"}>
+                <Link href={"/plans"} prefetch>
                   <DropdownMenuItem className="cursor-pointer">
                     <Sparkles className="w-6 h-6 mr-2 text-[#6B6B6B]" />
                     Become a member
@@ -233,7 +233,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
           </div>
         )}
         {!isSignedIn && (
-          <Link href="/sign-in">
+          <Link href="/sign-in" prefetch>
             <Button
               variant="default"
               className="bg-black text-white rounded-[20px] hover:bg-black"

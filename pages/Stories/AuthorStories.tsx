@@ -9,15 +9,14 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 
 function AuthorStories() {
-  const [setUserArticles, userArticles, loading, setLoading,recommendedTags] = useArticleStore(
-    (state) => [
+  const [setUserArticles, userArticles, loading, setLoading, recommendedTags] =
+    useArticleStore((state) => [
       state.setUserArticles,
       state.userArticles,
       state.loading,
       state.setLoading,
-      state.recommendedTags
-    ]
-  );
+      state.recommendedTags,
+    ]);
   useEffect(() => {
     fetchArticles(setLoading, setUserArticles);
   }, []);
@@ -31,7 +30,7 @@ function AuthorStories() {
         <div className="mt-10">
           <div className="flex items-center justify-between font-semibold">
             <h1 className="text-[40px]">Your stories</h1>
-            <Link href={"/write-story"}>
+            <Link href={"/write-story"} prefetch>
               {" "}
               <Button className="bg-[#1A8917] text-white rounded-full p-2 text-sm hover:bg-[#399c36] disabled:bg-[gray]">
                 Write a story

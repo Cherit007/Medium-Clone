@@ -1,14 +1,22 @@
 version: '3.5'
 services:
-  # web-app:
-  #   build:
-  #     context: ./
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./:/app
-  #   command: npm run dev
+  web-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+    command: npm run dev
+    depends_on:
+      - hash-tag
+      - ask-ai
+      - search-engine
+      - recommendations
+      - mail-service
+      - text-speech
+      - summarize-ai
 
   hash-tag:
     image: saidhanush7/hashtag:0.0.1.RELEASE
@@ -44,7 +52,7 @@ services:
     image: saidhanush7/summarizeai:0.0.1.RELEASE
     ports:
       - "9070:9070"
-  
+    
 
   
   
