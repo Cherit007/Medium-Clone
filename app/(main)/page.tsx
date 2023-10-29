@@ -1,7 +1,5 @@
 import { database, storage } from "@/appwriteConfig";
-import ArticleFeed from "@/components/Articles/ArticleFeed";
-import SideBarFeed from "@/components/Articles/SideBarFeed";
-import Navbar from "@/components/Navbar/Navbar";
+import { StripePaymentCheck } from "@/controllers/StripePaymentCheck";
 import { currentProfile } from "@/lib/current-profile";
 import { decryptText } from "@/lib/encrypt-decrypt";
 import { redirectUser } from "@/lib/redirect-user";
@@ -10,10 +8,9 @@ import Home from "@/pages/home";
 import { Query } from "appwrite";
 
 const fetchPaymentDetails = async (user: any) => {
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
   let session;
   if (user.payment_session_id) {
-    session = await stripe.checkout.sessions.retrieve(user.payment_session_id);
+    session = await StripePaymentCheck(process.env.STRIPE_SECRET_KEY, user.payment_session_id);
   }
   else {
     session = { payment_status: 'unpaid' }
@@ -111,7 +108,7 @@ const HomePage = async () => {
       {!user?.$id ? (
         <Home />
       ) : (
-        <UserFeed user={currentUser} feedForUser={feedForUser} secret_key={process.env.STRIPE_SECRET_KEY} />
+        <UserFeed user={currentUser} feedForUser={feedForUser} secret_key={process.env.STRIPE_SECRET_KEY} app_url={process.env.NEXT_PUBLIC_BASE_URL} />
       )}
     </>
   );

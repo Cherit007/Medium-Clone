@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/popover";
 import Image from "next/image";
 import useArticleStore from "@/store/useArticleStore";
-import { Atom, Image as Img, Loader2, PlusCircle, X } from "lucide-react";
+import { Atom, Image as Img, Loader2, Lock, PlusCircle, X } from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { currentProfile } from "@/lib/current-profile";
 
 interface AIResultsProps {
   point: string;
@@ -32,6 +33,7 @@ function WriteArticle({
   const [aiLoading, setAiLoading] = useState<boolean>(false);
   const [aiResults, setAiResults] = useState<AIResultsProps[]>();
   const pathname = useParams();
+  const [isMember, setIsMember] = useState(false);
   const [
     img,
     setImg,
@@ -60,6 +62,12 @@ function WriteArticle({
       setDescription(editedDescription);
       setImg(editedArticleImgUrl);
     }
+    async () => {
+      const currentUser: any = await currentProfile();
+      if (currentUser.is_member === true) {
+        setIsMember(true);
+      }
+    }
   }, []);
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +82,9 @@ function WriteArticle({
     if (words.length > 10) setTitleValidation(true);
     else setTitleValidation(false);
   };
-
+  const handleAskAiNotMember = () => {
+    window.location.href = "/plans";
+  }
   const handleAskAi = async () => {
     if (title) {
       const payload = {
@@ -221,15 +231,28 @@ function WriteArticle({
                   {title}
                 </p>
               )}
-              <Button
-                onClick={handleAskAi}
-                variant="outline"
-                className="rounded-full mt-5"
-                disabled={aiLoading || title.length<2}
-              >
-                {aiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Ask
-              </Button>
+              {isMember &&
+                <Button
+                  onClick={handleAskAi}
+                  variant="outline"
+                  className="rounded-full mt-5"
+                  disabled={aiLoading || title.length < 2}
+                >
+                  {aiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Ask
+                </Button>}
+
+              {!isMember &&
+                <Button
+                  onClick={handleAskAiNotMember}
+                  variant="outline"
+                  className="rounded-full mt-5"
+                  disabled={aiLoading || title.length < 2}
+                >
+                  {aiLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  <span className="mr-2">Ask</span> <Lock />
+                </Button>}
+
             </div>
           </div>
         </div>
