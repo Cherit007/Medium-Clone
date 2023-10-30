@@ -179,7 +179,7 @@ function WriteArticle({
           </div>
         </div>
         <div className="bg-[#F2F2F2] w-[80%] mx-auto md:w-[38%] flex flex-auto p-3 justify-center  rounded-[20px]">
-          <div className="flex flex-col text-semibold justify-around">
+          <div className="flex flex-col text-semibold justify-around px-[25px]">
             <div className="flex text-center">
               <img
                 src="/askai.gif"

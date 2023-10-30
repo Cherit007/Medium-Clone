@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { PlayCircle, Loader, Lock } from "lucide-react";
+import { PlayCircle, Loader, Lock, ThumbsUp, MessageSquare, Bookmark, Share} from "lucide-react";
 import useArticleStore from "@/store/useArticleStore";
 import { calculateTime } from "@/lib/calculate-time";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,8 @@ import { ID, Query } from "appwrite";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 import { calculateArticleReadTime } from "@/lib/calculate-read-time";
-import { currentProfile } from "@/lib/current-profile";
+import { useToast } from "../ui/use-toast";
+import {v4 as uuidv4} from "uuid";
 
 const styles = {
   wrapper: `flex items-center justify-center flex-[3] ml-[80px] px-10 border-l border-r`,
@@ -27,18 +28,35 @@ const styles = {
   title: `font-bold text-3xl`,
   subtitle: `font-mediumSerifItalic text-[1.4rem] text-[#292929] font-semibold`,
   articleText: `font-mediumSerif text-[1.4rem] text-[#292929] h-full`,
+  articleInteractionBar: `flex items-center justify-between mt-[.2rem] mb-[.2rem] border-t border-b`,
+  articleFeedback:`flex items-center justify-center gap-[2rem] py-[1rem]`,
+  articleOptions:`flex items-center justify-center gap-[2rem] py-[1rem]`,
+  articleLike:`flex items-center gap-[0.7rem]`,
+  articleLikeButton:`cursor-pointer text-[#787878] hover:text-[#000]`,
+  articleLikes: `cursor-pointer text-[#787878] hover:text-[#000]`,
+  articleComment:`flex items-center gap-[0.7rem] cursor-pointer text-[#787878] hover:text-[#000]`,
+  articleCommentButton:``,
+  articleComments:``,
+  articleSave:``,
+  articleSaveButton: `cursor-pointer text-[#787878] hover:text-[#000]`,
+  articleShare:``,
+  articleShareButton: `cursor-pointer text-[#787878] hover:text-[#000]`,
 };
 const ArticleMain = ({ user }: { user: any }) => {
-  const [currentArticle, setCurrentArticle, setLoading, loading] =
+  const [currentArticle, setCurrentArticle, setLoading, loading, savedArticle, setSavedArticle] =
     useArticleStore((state) => [
       state.currentArticle,
       state.setCurrentArticle,
       state.setLoading,
       state.loading,
+      state.savedArticle,
+      state.setSavedArticle
     ]);
+  const { toast } = useToast();
   const [isMember, setIsMember] = useState(false);
   const callApi = useRef(true);
-
+  const isSavedArticle = savedArticle?.find((i) => i?.$id === (currentArticle?.$id as any));
+  const isLikedArticle = currentArticle?.likes?.find((i: any)=> i.userId === user?.$id);
   const [audioDataLocation, setAudioDataLocation] = useState<any>();
   const [audioDataAvailable, setAudioDataAvailable] = useState<boolean>(false);
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
@@ -140,7 +158,102 @@ const ArticleMain = ({ user }: { user: any }) => {
       console.log(e);
     }
   };
-
+  const handleSavedArticle = async (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    item: ArticleProps | undefined
+  ) => {
+    e.stopPropagation();
+    toast({
+      variant: "destructive",
+      title: "Saved this article",
+      className: "bg-[green] text-white rounded-[20px]",
+    });
+    if (!isSavedArticle) {
+      setSavedArticle([...savedArticle, item]);
+      await database.updateDocument(
+        "651d2c31d4f6223e24e2",
+        "65219b9e7c62b9078824",
+        user?.$id as string,
+        {
+          savedArticles: [...(user?.savedArticles || []), item?.$id],
+        }
+      );
+    } else {
+      toast({
+        className: "bg-[red] text-white rounded-[20px]",
+        variant: "default",
+        title: "Removed this article",
+      });
+      const newArr = savedArticle;
+      const index = newArr.findIndex((i) => i?.$id === item?.$id);
+      newArr.splice(index, 1);
+      setSavedArticle(newArr);
+      await database.updateDocument(
+        "651d2c31d4f6223e24e2",
+        "65219b9e7c62b9078824",
+        user?.$id as string,
+        {
+          savedArticles: newArr.map((article) => article?.$id),
+        }
+      );
+    }
+  };
+  const handleArticleLike = async () => {
+    let likedArticle;
+    if(!isLikedArticle){
+    const uid = uuidv4();
+      likedArticle = await database.createDocument(
+        "651d2c31d4f6223e24e2",
+        "653f86c8df6f233db9e5",
+        uid,
+        {
+          articleId: currentArticle?.$id,
+          likesCount: currentArticle?.likes.length + 1,
+          articles: currentArticle?.$id,
+          userId: user?.$id,
+          likeStatus: true,
+        }
+      );
+    }
+    else if (isLikedArticle && isLikedArticle?.likeStatus){
+      likedArticle = await database.updateDocument(
+        "651d2c31d4f6223e24e2",
+        "653f86c8df6f233db9e5",
+        isLikedArticle.$id, 
+        {
+          likesCount : currentArticle?.likes.length > 0 ? currentArticle?.likes.length - 1 : 0,
+          likeStatus : false
+        }
+      );
+    }
+    else if (isLikedArticle && !isLikedArticle?.likeStatus){
+      likedArticle = await database.updateDocument(
+        "651d2c31d4f6223e24e2",
+        "653f86c8df6f233db9e5",
+        isLikedArticle.$id, 
+        {
+          likesCount : currentArticle?.likes.length + 1,
+          likeStatus : true
+        }
+      );
+    }
+    const updatedArticle = await database.listDocuments(
+      "651d2c31d4f6223e24e2",
+      "651d2c5fca0e679e84a7",
+      [Query.equal("$id", likedArticle?.articleId)]
+    );
+    setCurrentArticle(updatedArticle.documents[0]);
+  };
+  const articleLikesCount = currentArticle?.likes?.filter((i: any) => i.likeStatus===true).length;
+  const copyToClipboard = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    toast({
+      variant: "default",
+      title: "URL Copied to the Clipboard",
+      className: "bg-[black] text-white rounded-[20px]",
+    });
+  }
   return (
     <div className={styles.wrapper}>
       {loading ? (
@@ -164,23 +277,23 @@ const ArticleMain = ({ user }: { user: any }) => {
                 <div>{currentArticle?.users?.name}</div>
                 <div className={styles.postDetails}>
                   <span>
-                    {calculateTime(currentArticle?.$createdAt as string)} •{" "}
+                    {calculateTime(currentArticle?.$createdAt as string)} {" • "}
                     {currentArticle?.description &&
                       calculateArticleReadTime(
                         currentArticle?.description || ""
                       )}
-                    •{" "}
+                    {" • "}
                   </span>
                   <div
                     onClick={handleListenClick}
                     className={styles.listenButton}
                   >
                     {audioEnable && !showAudioBar && isMember ? (
-                      <p className="flex justify-between items-center gap-x-10 ">
+                      <p className="flex justify-between items-center cursor-text">
                         Converting to speech...
                         <img
                           src="/audio-book.png"
-                          className="w-10 h-10 animate-bounce"
+                          className="ml-0 w-5 h-5 animate-bounce cursor-default"
                         />
                       </p>
                     ) : !audioEnable && !showAudioBar && isMember ? (
@@ -225,6 +338,7 @@ const ArticleMain = ({ user }: { user: any }) => {
               <MoreHorizontal />
             </div> */}
           </div>
+          
           <div className={styles.articleMainContainer}>
             {currentArticle?.articleImgUrl && (
               <div className={styles.bannerContainer}>
@@ -243,6 +357,39 @@ const ArticleMain = ({ user }: { user: any }) => {
             </h4>
             <div className={styles.articleText}>
               {currentArticle?.description}
+            </div>
+          </div>
+          <div className={styles.articleInteractionBar}>
+            <div className={styles.articleFeedback}>
+              <div className={styles.articleLike}>
+                <ThumbsUp
+                  fill={isLikedArticle?.likeStatus ? "black" : "none"}
+                  onClick={handleArticleLike}
+                  className={styles.articleLikeButton}
+                />
+                <span className={styles.articleLikes}>{articleLikesCount || "0"}</span>
+              </div>
+              <div className={styles.articleComment}>
+                <MessageSquare 
+                  className={styles.articleCommentButton}
+                />
+                <span className={styles.articleComments}>{currentArticle?.comment || "0"}</span>
+              </div>
+            </div>
+            <div className={styles.articleOptions}>
+              <div className={styles.articleSave}>
+                <Bookmark 
+                  fill={isSavedArticle ? "black" : "none"}
+                  onClick={(e) => handleSavedArticle(e, currentArticle)}
+                  className={styles.articleSaveButton}
+                />
+              </div>
+              <div className={styles.articleShare}>
+                <Share 
+                  onClick={copyToClipboard}
+                  className={styles.articleShareButton}
+                />
+              </div>
             </div>
           </div>
         </div>
