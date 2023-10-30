@@ -4,9 +4,6 @@ import axios from "axios";
 import { Loader2, Lock } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { currentProfile } from "@/lib/current-profile";
-import Link from "next/link";
-
 function ArticleSummarization({ user }: { user: any }) {
   const [currentArticle] = useArticleStore((state) => [state.currentArticle]);
   const [summarizedData, setSummarizedData] = useState<string>("");
@@ -54,7 +51,7 @@ function ArticleSummarization({ user }: { user: any }) {
       ) : summarizedData ? (
         <p>{summarizedData}</p>
       ) : (
-        <ul className="text-sm space-y-4 list-disc">
+        <ul className="text-sm space-y-4 list-disc px-[15px]">
           <li>
             This tool provides a concise summary of the article's key points.
           </li>

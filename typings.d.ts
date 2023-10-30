@@ -67,6 +67,8 @@ interface ArticleProps {
   };
   currentUser?: any;
   subTopics?: string[] | [];
+  likes?: any;
+  comment?: any;
 }
 
 interface EditedArticleProps {

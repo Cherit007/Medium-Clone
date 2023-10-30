@@ -3,7 +3,7 @@ import { database } from "@/appwriteConfig";
 import { calculateArticleReadTime } from "@/lib/calculate-read-time";
 import { calculateTime } from "@/lib/calculate-time";
 import useArticleStore from "@/store/useArticleStore";
-import { BookmarkPlus, BookPlus } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -178,7 +178,7 @@ function ArticleCard({
               </p>
             </div>
 
-            <BookmarkPlus
+            <Bookmark
               onClick={(e) => {
                 handleSavedArticle(e, {
                   status,
@@ -191,8 +191,8 @@ function ArticleCard({
                   users,
                 });
               }}
-              className={`h-6 w-6 cursor-pointer text-[#6B6B6B]/70 ${
-                isSavedArticle && "fill-[#6B6B6B]"
+              className={`h-6 w-6 cursor-pointer text-[#6B6B6B]/70 hover:text-[#000] ${
+                isSavedArticle && "fill-[#000]"
               }`}
             />
           </div>
