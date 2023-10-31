@@ -1,6 +1,7 @@
 import { database, storage } from "@/appwriteConfig";
 import { StripePaymentCheck } from "@/controllers/StripePaymentCheck";
 import { currentProfile } from "@/lib/current-profile";
+import { decryptText } from "@/lib/encrypt-decrypt";
 import { redirectUser } from "@/lib/redirect-user";
 import UserFeed from "@/pagesfolder/Feed/UserFeed";
 import Home from "@/pagesfolder/home";

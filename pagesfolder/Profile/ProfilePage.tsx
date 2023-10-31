@@ -360,6 +360,8 @@ function ProfilePage({ currentUser }: any) {
                                         $createdAt={item?.$createdAt}
                                         $id={item.$id}
                                         users={item?.users}
+                                        articleRating={item?.articleRating}
+                                        comments={item?.comments}
                                       />
                                     </div>
                                   );

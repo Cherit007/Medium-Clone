@@ -1,5 +1,5 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import ArticleCard from "./ArticleCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
@@ -7,7 +7,6 @@ import {
   articleFeedUpdateAnimationDelay,
 } from "@/constants";
 import { Loader } from "lucide-react";
-
 
 function ArticleFeed({ articles, currentUser }: any) {
   const [articlesDisplayCount, setArticlesDisplayCount] =
@@ -57,7 +56,7 @@ function ArticleFeed({ articles, currentUser }: any) {
               <ArticleCard
                 key={index}
                 users={item?.users}
-                status={item.status}
+                status={"feed"}
                 title={item.title}
                 description={item?.description}
                 $createdAt={item.$createdAt}
@@ -65,6 +64,8 @@ function ArticleFeed({ articles, currentUser }: any) {
                 $id={item.$id}
                 topic={item.topic}
                 currentUser={currentUser}
+                comments={item?.comments}
+                articleRating={item?.articleRating}
               />
             );
           })}

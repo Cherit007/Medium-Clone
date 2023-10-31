@@ -29,7 +29,6 @@ function ArticleSummarization({ user }: { user: any }) {
   
   useEffect(() => {
     const getMembershipStatus = () => {
-      console.log(user);
       if (user.is_member === true) {
         setIsMember(true);
       }

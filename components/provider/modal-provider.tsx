@@ -5,6 +5,7 @@ import ArticleDeleteModal from "../modals/article-delete-modal";
 import UserAccountDeleteModal from "../modals/user-account-delete";
 import { WriteArticleModal } from "../modals/write-article-modal";
 import { WriteEditArticleModal } from "../modals/write-edit-article-modal";
+import CommentSheet from "../sheets/comment-sheet";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -20,6 +21,7 @@ export const ModalProvider = () => {
       <WriteEditArticleModal />
       <ArticleDeleteModal />
       <UserAccountDeleteModal />
+      <CommentSheet />
     </>
   );
 };

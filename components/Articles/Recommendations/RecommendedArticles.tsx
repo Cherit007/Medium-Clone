@@ -61,6 +61,8 @@ function RecommendedArticles({ currentUser }: { currentUser: any }) {
                 $id={item?.$id}
                 users={item?.users}
                 currentUser={currentUser}
+                articleRating={item?.articleRating}
+                comments={item?.comments}
               />
             );
           })

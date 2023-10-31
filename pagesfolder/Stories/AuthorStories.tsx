@@ -49,7 +49,9 @@ function AuthorStories() {
                     topic={item.topic}
                     articleImgUrl={item.articleImgUrl}
                     $createdAt={item.$createdAt}
+                    articleRating={item?.articleRating}
                     $id={item.$id}
+                    comments={item?.comments}
                     users={item?.users}
                   />
                 </div>

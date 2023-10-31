@@ -13,6 +13,7 @@ interface ModalData {
   $id?: string;
   title?: string;
   userId?: string;
+  name?: string;
 }
 
 interface ArticleState {
@@ -23,10 +24,10 @@ interface ArticleState {
   description: string;
   setDescription: (description) => void;
   setPublish: (title) => void;
-  type: ModalType | null;
+  type: ModalType | null | SheetType;
   data: ModalData | undefined;
   isOpen: boolean;
-  onOpen: (type: ModalType, data?: {}) => void;
+  onOpen: (type: ModalType | SheetType, data?: {}) => void;
   onClose: () => void;
   imgUrl: any;
   setImgUrl: (imgUrl) => void;
@@ -48,7 +49,15 @@ interface ArticleState {
   setRecommendedArticle: (recommendedTags) => void;
 }
 
-type ArticleCardType = "recommended" | "me";
+interface CommentProps {
+  $createdAt: string;
+  $id: string;
+  articleId: string;
+  comment: string;
+  userId: string;
+}
+
+type ArticleCardType = "recommended" | "me" | "feed";
 
 interface ArticleProps {
   status?: ArticleCardType;
@@ -59,12 +68,14 @@ interface ArticleProps {
   $createdAt: string;
   $id: string;
   audioUrl?: string;
+  comments: CommentProps[];
   users: {
     name: string;
     profile_img_url: string;
     savedArticles?: string[] | [];
     $id: string;
   };
+  articleRating:number;
   currentUser?: any;
   subTopics?: string[] | [];
   likes?: any;
@@ -87,6 +98,8 @@ type ModalType =
   | "editWriteArticle"
   | "deleteArticle"
   | "userAccountDelete";
+
+type SheetType = "commentArticle";
 
 interface MembershipPlanFeatures {
   label: string;

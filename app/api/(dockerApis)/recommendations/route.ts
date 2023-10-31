@@ -14,9 +14,10 @@ export async function POST(req: Request) {
     const baseUrl =
       NEXT_PROD_MODE === "true" ? "recommendations" : NEXT_PUBLIC_API_BASE_URL;
 
-    const res = await axios.post(`http://${baseUrl}:9000/get-recommendations`, {
-      article_name: "Securing Your Web Applications: Best Practices",
-    });
+    const res = await axios.post(
+      `http://${baseUrl}:9000/get-recommendations`,
+      payload
+    );
     const articles = res.data.recommendations;
 
     const queryPromises = articles.map(async (item: string) => {

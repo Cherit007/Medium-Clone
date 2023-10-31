@@ -3,7 +3,7 @@ import { database } from "@/appwriteConfig";
 import { calculateArticleReadTime } from "@/lib/calculate-read-time";
 import { calculateTime } from "@/lib/calculate-time";
 import useArticleStore from "@/store/useArticleStore";
-import { Bookmark } from "lucide-react";
+import { Bookmark, BookmarkPlus, BookPlus, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,8 @@ function ArticleCard({
   $id,
   users,
   currentUser,
+  comments,
+  articleRating,
 }: ArticleProps) {
   const [
     setDescription,
@@ -107,9 +109,21 @@ function ArticleCard({
       $id,
       users,
       currentUser,
+      articleRating,
     });
     // router.push(`/article/${users?.name}/${$id}`);
   };
+  
+  let i = 0;
+  const StarComponent = Array.from({ length: 5 }, (_, index) => {
+    i += 1;
+    return (
+      <Star
+        className={`h-4 w-4 ${i <= articleRating && "fill-yellow-300"}`}
+        key={index}
+      />
+    );
+  });
 
   return (
     <div
@@ -176,6 +190,7 @@ function ArticleCard({
               <p className="text-[#6B6B6B] text-sm">
                 {calculateArticleReadTime(description)} read
               </p>
+              {StarComponent}
             </div>
 
             <Bookmark
@@ -189,6 +204,8 @@ function ArticleCard({
                   $createdAt,
                   $id,
                   users,
+                  comments,
+                  articleRating,
                 });
               }}
               className={`h-6 w-6 cursor-pointer text-[#6B6B6B]/70 hover:text-[#000] ${
