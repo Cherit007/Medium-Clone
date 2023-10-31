@@ -10,7 +10,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import ioSocket from "../../web-sockets/index";
 import { v4 as uuidv4 } from "uuid";
 import useArticleStore from "@/store/useArticleStore";
 import Image from "next/image";
@@ -60,7 +59,6 @@ function CommentSheet() {
 
   const isSheetOpen = isOpen && type === "commentArticle";
 
-  console.log(currentArticle);
   const handleArticleComment = async () => {
     if (commentData && currentArticle?.$id && data?.userId) {
       const uid = uuidv4();
