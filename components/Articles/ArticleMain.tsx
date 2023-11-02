@@ -85,7 +85,7 @@ const ArticleMain = ({ user }: { user: any }) => {
   const [audioDataAvailable, setAudioDataAvailable] = useState<boolean>(false);
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
-
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const pathname = usePathname();
   const articleId = pathname?.split("/").pop() as string;
 
@@ -109,6 +109,10 @@ const ArticleMain = ({ user }: { user: any }) => {
         if (res.documents) {
           let articles = res.documents[0];
           // articles.description = decryptText(articles?.description, "secretKey");
+          if(articles?.likes){
+            const like: boolean = articles?.likes?.find((i: any) => i?.userId === user?.$id)?.likeStatus;
+            setIsLiked(like);
+          }
           if (articles?.articleImgUrl) {
             const imgs = storage.getFilePreview(
               "6522a1f72adc01958f6c",
@@ -127,6 +131,7 @@ const ArticleMain = ({ user }: { user: any }) => {
       }
     };
     fetchArticle();
+
   }, []);
 
   const storeMp3DataInStorage = async (file: any) => {
@@ -227,6 +232,7 @@ const ArticleMain = ({ user }: { user: any }) => {
   const handleArticleLike = async () => {
     let likedArticle;
     if (!isLikedArticle) {
+      setIsLiked(true);
       const uid = uuidv4();
       likedArticle = await database.createDocument(
         "651d2c31d4f6223e24e2",
@@ -241,6 +247,7 @@ const ArticleMain = ({ user }: { user: any }) => {
         }
       );
     } else if (isLikedArticle && isLikedArticle?.likeStatus) {
+      setIsLiked(false);
       likedArticle = await database.updateDocument(
         "651d2c31d4f6223e24e2",
         "653f86c8df6f233db9e5",
@@ -254,6 +261,7 @@ const ArticleMain = ({ user }: { user: any }) => {
         }
       );
     } else if (isLikedArticle && !isLikedArticle?.likeStatus) {
+      setIsLiked(true);
       likedArticle = await database.updateDocument(
         "651d2c31d4f6223e24e2",
         "653f86c8df6f233db9e5",
@@ -393,7 +401,7 @@ const ArticleMain = ({ user }: { user: any }) => {
             <div className={styles.articleFeedback}>
               <div className={styles.articleLike}>
                 <ThumbsUp
-                  fill={isLikedArticle?.likeStatus ? "black" : "none"}
+                  fill={isLiked ? "black" : "none"}
                   onClick={handleArticleLike}
                   className={styles.articleLikeButton}
                 />
