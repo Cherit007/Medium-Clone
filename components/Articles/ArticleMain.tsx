@@ -86,7 +86,10 @@ const ArticleMain = ({ user }: { user: any }) => {
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [likesCount, setLikesCount] = useState<number>(currentArticle?.likes?.length);
+  const [likesCount, setLikesCount] = useState<number>(
+    currentArticle?.likes?.length
+  );
+  const [loader, setLoader] = useState<boolean>(false);
   const pathname = usePathname();
   const articleId = pathname?.split("/").pop() as string;
 
@@ -110,9 +113,11 @@ const ArticleMain = ({ user }: { user: any }) => {
         if (res.documents) {
           let articles = res.documents[0];
           // articles.description = decryptText(articles?.description, "secretKey");
-          if(articles?.likes){
+          if (articles?.likes) {
             setLikesCount(articles?.likes?.length);
-            const like: boolean = articles?.likes?.find((i: any) => i?.userId === user?.$id)?.likeStatus;
+            const like: boolean = articles?.likes?.find(
+              (i: any) => i?.userId === user?.$id
+            )?.likeStatus;
             setIsLiked(like);
           }
           if (articles?.articleImgUrl) {
@@ -133,7 +138,6 @@ const ArticleMain = ({ user }: { user: any }) => {
       }
     };
     fetchArticle();
-
   }, []);
 
   const storeMp3DataInStorage = async (file: any) => {
@@ -232,7 +236,9 @@ const ArticleMain = ({ user }: { user: any }) => {
     }
   };
   const handleArticleLike = async () => {
+    if(loader) return;
     let likedArticle;
+    setLoader(true);
     if (!isLikedArticle) {
       setLikesCount((prev) => prev + 1);
       setIsLiked(true);
@@ -283,6 +289,7 @@ const ArticleMain = ({ user }: { user: any }) => {
       [Query.equal("$id", likedArticle?.articleId)]
     );
     setCurrentArticle(updatedArticle.documents[0]);
+    setLoader(false);
   };
   const articleLikesCount = currentArticle?.likes?.filter(
     (i: any) => i.likeStatus === true
@@ -410,9 +417,7 @@ const ArticleMain = ({ user }: { user: any }) => {
                   onClick={handleArticleLike}
                   className={styles.articleLikeButton}
                 />
-                <span className={styles.articleLikes}>
-                  {likesCount}
-                </span>
+                <span className={styles.articleLikes}>{likesCount}</span>
               </div>
               <div className={styles.articleComment}>
                 <MessageSquare
