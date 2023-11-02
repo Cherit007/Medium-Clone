@@ -120,12 +120,12 @@ function Navbar({ buttonText, status }: NavbarProps) {
       <div className="flex ml-6 items-center">
         <div className="flex items-center">
           <Link href={"/"} prefetch>
-            <Image
-              src={"/Logo.jpeg"}
-              alt="logo"
-              width={80}
-              height={80}
-              className="opacity-70 h-13 w-20 mr-3 rounded-full"
+          <Image
+            src={"/Logo.jpeg"}
+            alt="logo"
+            width={80}
+            height={80}
+              className="opacity-70 h-13 w-20 mr-3 rounded-full cursor-pointer"
             />
           </Link>
           {!isSignedIn && <p className="text-[30px] font-bold">MindScribe</p>}

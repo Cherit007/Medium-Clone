@@ -86,6 +86,7 @@ const ArticleMain = ({ user }: { user: any }) => {
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likesCount, setLikesCount] = useState<number>(currentArticle?.likes?.length);
   const pathname = usePathname();
   const articleId = pathname?.split("/").pop() as string;
 
@@ -110,6 +111,7 @@ const ArticleMain = ({ user }: { user: any }) => {
           let articles = res.documents[0];
           // articles.description = decryptText(articles?.description, "secretKey");
           if(articles?.likes){
+            setLikesCount(articles?.likes?.length);
             const like: boolean = articles?.likes?.find((i: any) => i?.userId === user?.$id)?.likeStatus;
             setIsLiked(like);
           }
@@ -232,6 +234,7 @@ const ArticleMain = ({ user }: { user: any }) => {
   const handleArticleLike = async () => {
     let likedArticle;
     if (!isLikedArticle) {
+      setLikesCount((prev) => prev + 1);
       setIsLiked(true);
       const uid = uuidv4();
       likedArticle = await database.createDocument(
@@ -247,6 +250,7 @@ const ArticleMain = ({ user }: { user: any }) => {
         }
       );
     } else if (isLikedArticle && isLikedArticle?.likeStatus) {
+      setLikesCount((prev) => prev - 1);
       setIsLiked(false);
       likedArticle = await database.updateDocument(
         "651d2c31d4f6223e24e2",
@@ -261,6 +265,7 @@ const ArticleMain = ({ user }: { user: any }) => {
         }
       );
     } else if (isLikedArticle && !isLikedArticle?.likeStatus) {
+      setLikesCount((prev) => prev + 1);
       setIsLiked(true);
       likedArticle = await database.updateDocument(
         "651d2c31d4f6223e24e2",
@@ -406,7 +411,7 @@ const ArticleMain = ({ user }: { user: any }) => {
                   className={styles.articleLikeButton}
                 />
                 <span className={styles.articleLikes}>
-                  {articleLikesCount || "0"}
+                  {likesCount}
                 </span>
               </div>
               <div className={styles.articleComment}>
