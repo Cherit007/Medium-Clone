@@ -12,8 +12,8 @@ const Home = () => {
     <div className={styles.wrapper}>
       <Navbar buttonText="Sign in/register" status="navbar" />
       <Banner />
-      <div className={styles.main}>To get started ,Please Sign in with us</div>
-      <Footer />
+      {/* <div className={styles.main}>To get started ,Please Sign in with us</div> */}
+      {/* <Footer /> */}
     </div>
   );
 };

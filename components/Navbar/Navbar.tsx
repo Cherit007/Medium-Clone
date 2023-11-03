@@ -112,14 +112,14 @@ function Navbar({ buttonText, status }: NavbarProps) {
 
   return (
     <nav
-      className={`flex justify-between max-h-[60px] bg-white sticky top-0 z-1000 nav-sticky  w-full ${
+      className={`flex justify-between max-h-[200px] bg-white sticky top-0 z-1000 nav-sticky  w-full ${
         !isSignedIn &&
         "sticky top-0 bg-[#FEC016] border-b-1 border-[black] transition ease-in-out delay-150"
       }`}
     >
       <div className="flex ml-6 items-center">
         <div className="flex items-center">
-          <Link href={"/"} prefetch>
+          {isSignedIn && (<Link href={"/"} prefetch>
           <Image
             src={"/Logo.jpeg"}
             alt="logo"
@@ -127,8 +127,8 @@ function Navbar({ buttonText, status }: NavbarProps) {
             height={80}
               className="opacity-70 h-13 w-20 mr-3 rounded-full cursor-pointer"
             />
-          </Link>
-          {!isSignedIn && <p className="text-[30px] font-bold">MindScribe</p>}
+          </Link>)}
+          {!isSignedIn && <p className="text-[27px] ml-1 font-bold p-2">MindScribe</p>}
         </div>
         {isSignedIn &&
           (!navbarStatus ? (
@@ -163,6 +163,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
           ))}
       </div>
       <div className="flex items-center justify-end mr-5 flex-1 gap-5">
+        {isSignedIn && (
         <Button
           variant="ghost"
           onClick={handleWriteArticle}
@@ -179,7 +180,8 @@ function Navbar({ buttonText, status }: NavbarProps) {
             <PenSquare className="w-6 h-6 cursor-pointer mr-2 text-[#6B6B6B]" />
           )}
           {buttonText}
-        </Button>
+        </Button>)}
+        
         {isSignedIn && !navbarStatus && (
           <Bell className="w-6 h-6 text-[#6B6B6B]" />
         )}
