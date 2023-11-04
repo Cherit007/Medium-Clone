@@ -54,7 +54,7 @@ function UserFeed(props: any) {
                   currentUser={props.user}
                 />
               </div>
-              <div className="hidden md:flex col-span-1 sticky right-0 top-[100px] h-[100vh] overflow-auto no-scrollbar">
+              <div className="hidden md:flex col-span-1 sticky right-0 top-[100px] max-h-[85vh] overflow-auto no-scrollbar">
                 <SideBarFeed
                   hotTopicsArr={props.feedForUser[1]}
                   currentUser={props.user}
