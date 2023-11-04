@@ -6,6 +6,7 @@ import useArticleStore from "@/store/useArticleStore";
 import { Bookmark, BookmarkPlus, BookPlus, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+// import  Link  from "react-router-dom";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
@@ -99,21 +100,22 @@ function ArticleCard({
   };
 
   const handleArticleClick = () => {
-    setCurrentArticle({
-      status,
-      title,
-      description,
-      topic,
-      articleImgUrl,
-      $createdAt,
-      $id,
-      users,
-      currentUser,
-      articleRating,
-    });
+    // setCurrentArticle({
+    //   status,
+    //   title,
+    //   description,
+    //   topic,
+    //   articleImgUrl,
+    //   $createdAt,
+    //   $id,
+    //   users,
+    //   currentUser,
+    //   articleRating,
+    // });
+    window.location.href = `/article/${users?.name}/${$id}`;
     // router.push(`/article/${users?.name}/${$id}`);
   };
-  
+
   let i = 0;
   const StarComponent = Array.from({ length: 5 }, (_, index) => {
     i += 1;
@@ -161,22 +163,24 @@ function ArticleCard({
       )}
       <div className="space-y-2">
         <div className="flex items-center justify-between space-x-5">
-          <Link href={`/article/${users?.name}/${$id}`} prefetch>
-            {" "}
-            <div
-              className="flex flex-col space-y-2 flex-1"
-              onClick={handleArticleClick}
-            >
-              <h2 className="font-bold text-[20px] ">{title}</h2>
-              <p>
-                {description &&
-                  (status === "recommended"
-                    ? description.slice(0, 150)
-                    : description.slice(0, 400))}
-                ....
-              </p>
-            </div>{" "}
-          </Link>
+          {/* <Link 
+          // to={`/article/${users?.name}/${$id}`}
+          href={`/article/${users?.name}/${$id}`}
+          > */}{" "}
+          <div
+            className="flex flex-col space-y-2 flex-1"
+            onClick={handleArticleClick}
+          >
+            <h2 className="font-bold text-[20px] ">{title}</h2>
+            <p>
+              {description &&
+                (status === "recommended"
+                  ? description.slice(0, 150)
+                  : description.slice(0, 400))}
+              ....
+            </p>
+          </div>{" "}
+          {/* </Link> */}
           {articleImgUrl && status !== "recommended" && (
             <Image src={articleImgUrl} alt="image" width={80} height={50} />
           )}

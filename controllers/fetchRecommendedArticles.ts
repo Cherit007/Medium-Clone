@@ -10,6 +10,7 @@ export const fetchRecommdedArticles = async (
     article_name: title,
   };
   const resp = await axios.post("/api/recommendations", payload);
-  setRecommendedArticle(resp.data?.data);
+  if (resp.status === 200) setRecommendedArticle(resp.data?.data);
+  else setRecommendedArticle([]);
   setLoading(false);
 };

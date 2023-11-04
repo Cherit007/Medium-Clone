@@ -9,13 +9,10 @@ export async function POST(req: Request) {
     const user = await currentProfile();
     if (!user) return new NextResponse("User not found", { status: 401 });
     const payload = await req.json();
-    const { NEXT_PUBLIC_API_BASE_URL, NEXT_PROD_MODE } = process.env;
-
-    const baseUrl =
-      NEXT_PROD_MODE === "true" ? "recommendations" : NEXT_PUBLIC_API_BASE_URL;
+    const { NEXT_PUBLIC_RECOMMENDATIONS_API_URL } = process.env;
 
     const res = await axios.post(
-      `http://${baseUrl}:9000/get-recommendations`,
+      `${NEXT_PUBLIC_RECOMMENDATIONS_API_URL}/get-recommendations`,
       payload
     );
     const articles = res.data.recommendations;

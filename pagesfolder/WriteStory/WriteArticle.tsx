@@ -189,12 +189,18 @@ function WriteArticle({
             </div>
             <ul className="mt-5">
               {aiLoading ? (
-                <>
-                  <Loader2 className="h-6 w-6 animate-spin text-[#4092b3] mx-auto" />
+                <div className="flex flex-col items-center justify-center">
+                  <Image
+                    src={"/askai1.gif"}
+                    height={100}
+                    width={100}
+                    className="rounded-[20px]"
+                    alt="ai"
+                  />
                   <p className="text-center text-[#6B6B6B] mt-4">
-                    This may take a moment.
+                    This may take a moment...
                   </p>
-                </>
+                </div>
               ) : !!aiResults ? (
                 <Accordion
                   type="single"

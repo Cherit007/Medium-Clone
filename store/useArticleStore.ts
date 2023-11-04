@@ -20,6 +20,14 @@ const useArticleStore = create<ArticleState>((set) => ({
   setLoading: (loading) => {
     set({ loading });
   },
+  audioDataLocation: false,
+  setAudioDataLocation: (audioDataLocation) => {
+    set({ audioDataLocation });
+  },
+  audioDataAvailable: false,
+  setAudioDataAvailable: (audioDataAvailable) => {
+    set({ audioDataAvailable });
+  },
   titleValidation: false,
   setTitleValidation: (titleValidation) => {
     set({ titleValidation });

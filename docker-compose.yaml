@@ -1,13 +1,11 @@
 version: '3.5'
 services:
   web-app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: saidhanush7/web-app:0.0.1.RELEASE
     ports:
       - "3000:3000"
     volumes:
-      - ./:/app
+      - ./:/
     command: npm run dev
     depends_on:
       - hash-tag

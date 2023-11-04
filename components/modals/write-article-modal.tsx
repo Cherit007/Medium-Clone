@@ -16,10 +16,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { storage } from "@/appwriteConfig";
 import { ID } from "appwrite";
 import { Loader2 } from "lucide-react";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { fetchArticles } from "@/controllers/fetchUserArticles";
 import { ScrollArea } from "../ui/scroll-area";
 import { useToast } from "../ui/use-toast";
+import Image from "next/image";
 
 const formSchema = z.object({
   topic: z.string(),
@@ -155,6 +156,17 @@ export const WriteArticleModal = () => {
                   </ScrollArea>
                 </SelectContent>
               </Select>
+              {isLoading && (
+                <div className="flex justify-center">
+                  <Image
+                    alt="write"
+                    src={"/write3.gif"}
+                    height={400}
+                    width={400}
+                    className="rounded-[20px]"
+                  />
+              </div>
+              )}
               <Button
                 type="submit"
                 className="bg-[#1A8917] text-white rounded-full p-2 text-sm hover:bg-[#399c36] disabled:bg-[gray]"

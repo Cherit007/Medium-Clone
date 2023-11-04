@@ -27,10 +27,13 @@ const Header = () => {
           />
         </div>
         <div className={styles.bannerNav}>
-          <Link href="/sign-in" prefetch>
-            {" "}
-            <Button variant="default">Sign in/Register</Button>
-          </Link>
+          {" "}
+          <Button
+            onClick={() => (window.location.href = "/sign-in")}
+            variant="default"
+          >
+            Sign in/Register
+          </Button>
           <div>Membership</div>
           <div>
             <Bell />

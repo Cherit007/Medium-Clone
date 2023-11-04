@@ -9,12 +9,9 @@ export async function POST(req: Request) {
     const user = await currentProfile();
     if (!user) return new NextResponse("User not found", { status: 401 });
     const payload = await req.json();
-    const { NEXT_PUBLIC_API_BASE_URL, NEXT_PROD_MODE } = process.env;
+    const { NEXT_PUBLIC_SENTIMENT_API_URL } = process.env;
 
-    const baseUrl =
-      NEXT_PROD_MODE === "true" ? "sentiment-ai" : NEXT_PUBLIC_API_BASE_URL;
-
-    const res = await axios.post(`http://${baseUrl}:9060/analyze`, {
+    const res = await axios.post(`${NEXT_PUBLIC_SENTIMENT_API_URL}/analyze`, {
       comment: payload?.comment,
     });
 

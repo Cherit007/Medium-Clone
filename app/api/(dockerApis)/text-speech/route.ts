@@ -10,12 +10,9 @@ export async function POST(req: Request) {
     if (!user) return new NextResponse("User not found", { status: 401 });
 
     const payload = await req.json();
-    const baseUrl = process.env.NEXT_PROD_MODE==="true"
-    ? "text-to-speech"
-    : process.env.NEXT_PUBLIC_API_BASE_URL;
     if (payload?.status === "add") {
       const res = await axios.post(
-        `http://${baseUrl}:9090/text-to-speech`,
+        `${process.env.NEXT_PUBLIC_TEXT_SPEECH_API_URL}/text-to-speech`,
         {
           text: payload?.text,
         },
@@ -26,7 +23,6 @@ export async function POST(req: Request) {
       const file = util.promisify(fs.writeFile);
       await file(`./public/assets/${payload?.id}.mp3`, res.data, "binary");
     } else if (payload?.status === "delete") {
-      console.log("delete");
       fs.unlink(`./public/assets/${payload?.id}.mp3`, (err) => {
         if (err) {
           console.error(`Error deleting`);

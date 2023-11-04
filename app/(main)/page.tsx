@@ -1,22 +1,26 @@
 import { database, storage } from "@/appwriteConfig";
 import { StripePaymentCheck } from "@/controllers/StripePaymentCheck";
+import { cronSetup } from "@/lib/cronSetup";
 import { currentProfile } from "@/lib/current-profile";
 import { decryptText } from "@/lib/encrypt-decrypt";
 import { redirectUser } from "@/lib/redirect-user";
 import UserFeed from "@/pagesfolder/Feed/UserFeed";
 import Home from "@/pagesfolder/home";
 import { Query } from "appwrite";
+import { useRef } from "react";
 
 const fetchPaymentDetails = async (user: any) => {
   let session;
   if (user.payment_session_id) {
-    session = await StripePaymentCheck(process.env.STRIPE_SECRET_KEY, user.payment_session_id);
-  }
-  else {
-    session = { payment_status: 'unpaid' }
+    session = await StripePaymentCheck(
+      process.env.STRIPE_SECRET_KEY,
+      user.payment_session_id
+    );
+  } else {
+    session = { payment_status: "unpaid" };
   }
   return session.payment_status;
-}
+};
 
 const updatePaymentStatus = async (user: any) => {
   await database.updateDocument(
@@ -24,10 +28,10 @@ const updatePaymentStatus = async (user: any) => {
     "65219b9e7c62b9078824",
     user?.$id,
     {
-      is_member: true
+      is_member: true,
     }
   );
-}
+};
 
 const fetchFeedArticles = async (user: any) => {
   let articles: ArticleProps[] = [];
@@ -88,18 +92,18 @@ const fetchFeedArticles = async (user: any) => {
 
 const HomePage = async () => {
   await redirectUser();
-  // cronSetup()
   const user = await currentProfile();
+  cronSetup();
   let feedForUser, paymentDetails, currentUser;
   currentUser = user;
   if (user) {
     feedForUser = await fetchFeedArticles(user);
     if (user.payment_session_id) {
       paymentDetails = await fetchPaymentDetails(user);
-      if (paymentDetails === 'paid') {
+      if (paymentDetails === "paid") {
         await updatePaymentStatus(user);
         // currentUser = await currentProfile();
-        user.is_member = true
+        user.is_member = true;
       }
     }
   }
@@ -108,7 +112,12 @@ const HomePage = async () => {
       {!user?.$id ? (
         <Home />
       ) : (
-        <UserFeed user={currentUser} feedForUser={feedForUser} secret_key={process.env.STRIPE_SECRET_KEY} app_url={process.env.NEXT_PUBLIC_BASE_URL} />
+        <UserFeed
+          user={currentUser}
+          feedForUser={feedForUser}
+          secret_key={process.env.STRIPE_SECRET_KEY}
+          app_url={process.env.NEXT_PUBLIC_BASE_URL}
+        />
       )}
     </>
   );

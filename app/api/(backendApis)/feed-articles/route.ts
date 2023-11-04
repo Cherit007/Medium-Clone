@@ -7,7 +7,6 @@ export async function GET(req: Request) {
   try {
     let articles: ArticleProps[] = [];
     const user = await currentProfile();
-    console.log(user,"user")
     const topics = user?.userTopics;
     const results = await Promise.all(
       topics?.map(async (item: string) => {

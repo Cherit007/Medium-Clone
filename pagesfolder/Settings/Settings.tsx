@@ -24,19 +24,19 @@ function Settings({ user }: { user: any }) {
           <div className="flex justify-between">
             <p>Username</p>
             <p className="text-[#6B6B6B]">{user?.name}</p>
-          </div>
-          <Link href={"/me/profile"} prefetch>
-            {" "}
-            <div className="flex justify-between items-center cursor-pointer">
-              <div>
-                <p>Profile information</p>
-                <p className="text-[#6B6B6B] text-sm">
-                  Edit your photo, name, etc.
-                </p>
-              </div>
-              <MoveUpRight className="w-5 h-5 text-[#6B6B6B]" />
+          </div>{" "}
+          <div
+            onClick={() => (window.location.href = "/me/profile")}
+            className="flex justify-between items-center cursor-pointer"
+          >
+            <div>
+              <p>Profile information</p>
+              <p className="text-[#6B6B6B] text-sm">
+                Edit your photo, name, etc.
+              </p>
             </div>
-          </Link>
+            <MoveUpRight className="w-5 h-5 text-[#6B6B6B]" />
+          </div>
           <Button
             onClick={() =>
               onOpen("userAccountDelete", { $id: $id, userId: userId })

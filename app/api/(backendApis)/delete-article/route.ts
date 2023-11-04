@@ -15,13 +15,19 @@ export async function POST(req: Request) {
       "651d2c5fca0e679e84a7",
       payload?.id
     );
-    await axios.post("http://search-engine:8000/delete-article-elastic-search", {
-      article_name: payload?.title,
-    });
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_SEARCH_ENGINE_API_URL}/delete-article-elastic-search`,
+      {
+        article_name: payload?.title,
+      }
+    );
 
-    await axios.post("http://recommendations:9000/delete-recommendation", {
-      article_name_to_delete: payload?.title,
-    });
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_RECOMMENDATIONS_API_URL}/delete-recommendation`,
+      {
+        article_name_to_delete: payload?.title,
+      }
+    );
 
     return NextResponse.json({ data: "Article deleted successfully" });
   } catch (e) {

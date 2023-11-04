@@ -7,7 +7,7 @@ function ArticleSavedCard({ item }: { item: ArticleProps }) {
   const router = useRouter();
   return (
     <div
-      onClick={() => router.push(`${item?.users?.name}/${item?.$id}`)}
+      onClick={() => router.push(`/article/${item?.users?.name}/${item?.$id}`)}
       className="flex flex-col space-y-2 mt-5 p-1 mb-5 cursor-pointer"
     >
       <div className="flex space-x-2 items-center">

@@ -23,7 +23,7 @@ def send_emails(articles,recipients):
         msg['Subject'] = 'Top Articles of the week'
 
         # Create the email body with the top articles in HTML format
-        email_body = "<h2>Here are the top articles from our website:<h2>"
+        email_body = "<h2 style="text-align:center">Here are the top articles from our website:<h2>"
         email_body += '<img src="https://cloud.appwrite.io/v1/storage/buckets/6522a1f72adc01958f6c/files/65340b601086596cd8ae/view?project=651d2ba78525fb690705&mode=admin" alt="Your Website Logo" width="210" height="200">'
         for article in articles:
             article_html = f"<h2>{article['title']}</h2><p>{article['content'][:200]}...</p>"

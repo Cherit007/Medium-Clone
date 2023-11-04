@@ -7,36 +7,30 @@ import ArticleCard from "../ArticleCard";
 import SkeletonArticle from "../SkeletonArticle";
 
 function RecommendedArticles({ currentUser }: { currentUser: any }) {
-  const [
-    currentArticle,
-    recommendedArticles,
-    setRecommendedArticle,
-    setLoading,
-  ] = useArticleStore((state) => [
-    state.currentArticle,
-    state.recommendedArticles,
-    state.setRecommendedArticle,
-    state.setLoading,
-  ]);
+  const [currentArticle, recommendedArticles, loading] = useArticleStore(
+    (state) => [state.currentArticle, state.recommendedArticles, state.loading]
+  );
   const callApi = useRef(true);
 
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        if (currentArticle?.title && callApi.current) {
-          callApi.current = false;
-          await fetchRecommdedArticles(
-            currentArticle?.title,
-            setRecommendedArticle,
-            setLoading
-          );
-        }
-      };
-      fetchData();
-    } catch (e) {
-      console.log(e);
-    }
-  }, [currentArticle?.title]);
+  // useEffect(() => {
+  //   try {
+  //     const fetchData = async () => {
+  //       if (currentArticle?.title && callApi.current) {
+  //         callApi.current = false;
+  //         await fetchRecommdedArticles(
+  //           currentArticle?.title,
+  //           setRecommendedArticle,
+  //           setLoading
+  //         );
+  //       }
+  //     };
+  //     fetchData();
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }, [currentArticle]);
+
+  console.log(recommendedArticles);
 
   return (
     <div className="mt-[80px] h-full flex flex-col w-full items-center flex-1 ">
@@ -66,8 +60,10 @@ function RecommendedArticles({ currentUser }: { currentUser: any }) {
               />
             );
           })
-        ) : (
+        ) : loading && recommendedArticles.length === 0 ? (
           <SkeletonArticle />
+        ) : (
+          <p>No recommendations found</p>
         )}
       </div>
     </div>

@@ -29,13 +29,13 @@ function AuthorStories() {
       ) : (
         <div className="mt-10">
           <div className="flex items-center justify-between font-semibold">
-            <h1 className="text-[40px]">Your stories</h1>
-            <Link href={"/write-story"} prefetch>
-              {" "}
-              <Button className="bg-[#1A8917] text-white rounded-full p-2 text-sm hover:bg-[#399c36] disabled:bg-[gray]">
-                Write a story
-              </Button>
-            </Link>
+            <h1 className="text-[40px]">Your stories</h1>{" "}
+            <Button
+              onClick={() => (window.location.href = "/write-story")}
+              className="bg-[#1A8917] text-white rounded-full p-2 text-sm hover:bg-[#399c36] disabled:bg-[gray]"
+            >
+              Write a story
+            </Button>
           </div>
           {/* <div className="flex items-center h-[50vh] justify-center"> */}
           {userArticles && userArticles?.length > 0 ? (

@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Bookmark,
   Share,
+  Star,
 } from "lucide-react";
 import useArticleStore from "@/store/useArticleStore";
 import { calculateTime } from "@/lib/calculate-time";
@@ -21,6 +22,7 @@ import axios from "axios";
 import { calculateArticleReadTime } from "@/lib/calculate-read-time";
 import { useToast } from "../ui/use-toast";
 import { v4 as uuidv4 } from "uuid";
+import { fetchCurrentArticle } from "@/controllers/fetchCurrentArticle";
 
 const styles = {
   wrapper: `flex items-center justify-center flex-[3] ml-[80px] px-10 border-l border-r`,
@@ -34,7 +36,7 @@ const styles = {
   socials: `flex gap-[1rem] text-[#787878] cursor-pointer`,
   space: `w-[.5rem]`,
   articleMainContainer: `flex flex-col gap-[1rem]`,
-  bannerContainer: `h-[18rem] w-full grid center overflow-hidden mb-[2rem] mx-auto`,
+  bannerContainer: `h-[18rem] w-full flex justify-center overflow-hidden mb-[2rem] mx-auto`,
   title: `font-bold text-3xl`,
   subtitle: `font-mediumSerifItalic text-[1.4rem] text-[#292929] font-semibold`,
   articleText: `font-mediumSerif text-[1.4rem] text-[#292929] h-full`,
@@ -63,6 +65,11 @@ const ArticleMain = ({ user }: { user: any }) => {
     savedArticle,
     setSavedArticle,
     onOpen,
+    setAudioDataLocation,
+    audioDataAvailable,
+    audioDataLocation,
+    setAudioDataAvailable,
+    setRecommendedArticle,
   ] = useArticleStore((state) => [
     state.currentArticle,
     state.setCurrentArticle,
@@ -71,18 +78,35 @@ const ArticleMain = ({ user }: { user: any }) => {
     state.savedArticle,
     state.setSavedArticle,
     state.onOpen,
+    state.setAudioDataLocation,
+    state.audioDataAvailable,
+    state.audioDataLocation,
+    state.setAudioDataAvailable,
+    state.setRecommendedArticle,
   ]);
   const { toast } = useToast();
   const [isMember, setIsMember] = useState(false);
+
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [likedStatus, setLikedStatus] = useState<boolean>(false);
+  const isLikedArticle = currentArticle?.likes?.find(
+    (i: any) => i.userId === user?.$id
+  );
+  useEffect(() => {
+    const articleLikesCount = currentArticle?.likes?.filter(
+      (i: any) => i.likeStatus === true
+    ).length;
+    const isLikedArticle = currentArticle?.likes?.find(
+      (i: any) => i.userId === user?.$id
+    );
+    setLikeCount(articleLikesCount);
+    setLikedStatus(isLikedArticle?.likeStatus);
+  }, [currentArticle]);
   const callApi = useRef(true);
   const isSavedArticle = savedArticle?.find(
     (i) => i?.$id === (currentArticle?.$id as any)
   );
-  const isLikedArticle = currentArticle?.likes?.find(
-    (i: any) => i.userId === user?.$id
-  );
-  const [audioDataLocation, setAudioDataLocation] = useState<any>();
-  const [audioDataAvailable, setAudioDataAvailable] = useState<boolean>(false);
+
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -98,46 +122,22 @@ const ArticleMain = ({ user }: { user: any }) => {
   };
 
   useEffect(() => {
-    const fetchArticle = async () => {
-      if (callApi.current) {
-        callApi.current = false;
-        setLoading(true);
-        if (user.is_member === true) {
-          setIsMember(true);
-        }
-        const res = await database.listDocuments(
-          "651d2c31d4f6223e24e2",
-          "651d2c5fca0e679e84a7",
-          [Query.equal("$id", articleId)]
-        );
-        if (res.documents) {
-          let articles = res.documents[0];
-          // articles.description = decryptText(articles?.description, "secretKey");
-          if (articles?.likes) {
-            setLikesCount(articles?.likes?.length);
-            const like: boolean = articles?.likes?.find(
-              (i: any) => i?.userId === user?.$id
-            )?.likeStatus;
-            setIsLiked(like);
-          }
-          if (articles?.articleImgUrl) {
-            const imgs = storage.getFilePreview(
-              "6522a1f72adc01958f6c",
-              articles?.articleImgUrl
-            );
-            articles.articleImgUrl = imgs.href;
-          } else articles.articleImgUrl = "";
-
-          if (articles?.audioUrl) {
-            setAudioDataLocation(articles?.audioUrl);
-            setAudioDataAvailable(true);
-          }
-          setCurrentArticle(articles);
-          setLoading(false);
-        }
-      }
+    if (user.is_member === true) {
+      setIsMember(true);
+    }
+    const fetchData = async () => {
+      await fetchCurrentArticle(
+        callApi,
+        setLoading,
+        articleId,
+        setAudioDataLocation,
+        setAudioDataAvailable,
+        setCurrentArticle,
+        setIsMember,
+        setRecommendedArticle
+      );
     };
-    fetchArticle();
+    fetchData();
   }, []);
 
   const storeMp3DataInStorage = async (file: any) => {
@@ -243,6 +243,8 @@ const ArticleMain = ({ user }: { user: any }) => {
       setLikesCount((prev) => prev + 1);
       setIsLiked(true);
       const uid = uuidv4();
+      setLikeCount((prev) => prev + 1);
+      setLikedStatus(true);
       likedArticle = await database.createDocument(
         "651d2c31d4f6223e24e2",
         "653f86c8df6f233db9e5",
@@ -291,9 +293,7 @@ const ArticleMain = ({ user }: { user: any }) => {
     setCurrentArticle(updatedArticle.documents[0]);
     setLoader(false);
   };
-  const articleLikesCount = currentArticle?.likes?.filter(
-    (i: any) => i.likeStatus === true
-  ).length;
+
   const copyToClipboard = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
@@ -303,6 +303,18 @@ const ArticleMain = ({ user }: { user: any }) => {
       className: "bg-[black] text-white rounded-[20px]",
     });
   };
+
+  const rating = currentArticle?.articleRating;
+
+  const StarComponent = !!rating
+    ? Array.from({ length: 5 }, (_, index) => (
+        <Star
+          className={`h-4 w-4 ${index < rating ? "fill-yellow-300" : ""}`}
+          key={index}
+        />
+      ))
+    : null;
+
   return (
     <div className={styles.wrapper}>
       {loading ? (
@@ -402,9 +414,12 @@ const ArticleMain = ({ user }: { user: any }) => {
               </div>
             )}
             <h1 className={styles.title}>{currentArticle?.title}</h1>
-            <h4 className={styles.subtitle}>
-              Written by {currentArticle?.users?.name}
-            </h4>
+            <div className="flex items-center gap-x-5">
+              <h4 className={styles.subtitle}>
+                Written by {currentArticle?.users?.name}
+              </h4>
+              {StarComponent}
+            </div>
             <div className={styles.articleText}>
               {currentArticle?.description}
             </div>

@@ -17,15 +17,15 @@ export async function POST(req: Request) {
         signUpStatus: "welcome",
       }
     );
-    const baseUrl = process.env.NEXT_PROD_MODE ==="true"
-    ? "mail-service"
-    : process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    const res = await axios.post(`http://${baseUrl}:9080/send-ack`, {
-      recipient_email: payload?.recipient_email,
-      subject: payload?.subject,
-      message: payload?.message,
-    });
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_MAIL_SERVICE_API_URL}/send-ack`,
+      {
+        recipient_email: payload?.recipient_email,
+        subject: payload?.subject,
+        message: payload?.message,
+      }
+    );
     return NextResponse.json({ data: res.data });
   } catch (e) {
     // console.log("AUTH FAILED", e);

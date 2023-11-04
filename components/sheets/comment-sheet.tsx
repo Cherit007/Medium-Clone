@@ -13,26 +13,44 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import useArticleStore from "@/store/useArticleStore";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArticleCommentCard from "../Articles/ArticleCommentCard";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Loader2 } from "lucide-react";
 import { Models, Query } from "appwrite";
 import axios from "axios";
+import { fetchCurrentArticle } from "@/controllers/fetchCurrentArticle";
 
 function CommentSheet() {
-  const [isOpen, onClose, type, currentArticle, data] = useArticleStore(
-    (state) => [
-      state.isOpen,
-      state.onClose,
-      state.type,
-      state.currentArticle,
-      state.data,
-    ]
-  );
+  const [
+    isOpen,
+    onClose,
+    type,
+    currentArticle,
+    data,
+    setAudioDataLocation,
+    audioDataAvailable,
+    audioDataLocation,
+    setAudioDataAvailable,
+    setCurrentArticle,
+    setRecommendedArticle
+  ] = useArticleStore((state) => [
+    state.isOpen,
+    state.onClose,
+    state.type,
+    state.currentArticle,
+    state.data,
+    state.setAudioDataLocation,
+    state.audioDataAvailable,
+    state.audioDataLocation,
+    state.setAudioDataAvailable,
+    state.setCurrentArticle,
+    state.setRecommendedArticle
+  ]);
 
   const [commentData, setCommentData] = useState<string>("");
+  const [isMember, setIsMember] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | Models.Document[]>(
     []
   );
@@ -40,7 +58,6 @@ function CommentSheet() {
 
   const fetchComments = async () => {
     if (currentArticle?.$id) {
-      setLoading(true);
       const data = await database.listDocuments(
         "651d2c31d4f6223e24e2",
         "653f47c5f252a9caf9f5",
@@ -50,7 +67,6 @@ function CommentSheet() {
         ]
       );
       setComments(data?.documents);
-      setLoading(false);
     }
   };
   useEffect(() => {
@@ -58,6 +74,7 @@ function CommentSheet() {
   }, [data]);
 
   const isSheetOpen = isOpen && type === "commentArticle";
+  const callApi = useRef(true);
 
   const handleArticleComment = async () => {
     if (commentData && currentArticle?.$id && data?.userId) {
@@ -72,6 +89,16 @@ function CommentSheet() {
         rating: currentArticle?.articleRating ?? 0,
       };
       await axios.post("/api/sentiment", payload);
+      await fetchCurrentArticle(
+        callApi,
+        setLoading,
+        currentArticle?.$id,
+        setAudioDataLocation,
+        setAudioDataAvailable,
+        setCurrentArticle,
+        setIsMember,
+        setRecommendedArticle
+      );
       await fetchComments();
       setCommentData("");
       setLoading(false);
@@ -108,21 +135,16 @@ function CommentSheet() {
               className="w-full h-[2px] mt-1 bg-[#6B6B6B]/20"
             />
           </div>
-          {loading ? (
-            <div className="flex justify-center mt-10">
-              <Loader2 className="w-6 h-6 animate-spin" />
-            </div>
-          ) : (
-            <div className="flex flex-col">
-              {comments && comments?.length > 0 ? (
-                comments.map((item) => {
-                  return <ArticleCommentCard item={item} />;
-                })
-              ) : (
-                <p className="text-center mt-6">No comments</p>
-              )}
-            </div>
-          )}
+
+          <div className="flex flex-col">
+            {comments && comments?.length > 0 ? (
+              comments.map((item,index) => {
+                return <ArticleCommentCard item={item} key={index} />;
+              })
+            ) : (
+              <p className="text-center mt-6">No comments</p>
+            )}
+          </div>
         </SheetContent>
       </Sheet>
     </>

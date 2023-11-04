@@ -7,13 +7,14 @@ export async function POST(req: Request) {
   try {
     const user = await currentProfile();
     if (!user) return new NextResponse("User not found", { status: 401 });
-    const { NEXT_PUBLIC_API_BASE_URL, NEXT_PROD_MODE } = process.env;
+    const { NEXT_PUBLIC_SUMMARIZE_API_URL } = process.env;
 
     const payload = await req.json();
-    const baseUrl =
-      NEXT_PROD_MODE === "true" ? "summarize-ai" : NEXT_PUBLIC_API_BASE_URL;
 
-    const res = await axios.post(`http://${baseUrl}:9070/summarize`, payload);
+    const res = await axios.post(
+      `${NEXT_PUBLIC_SUMMARIZE_API_URL}/summarize`,
+      payload
+    );
 
     return NextResponse.json({ data: res.data });
   } catch (e) {

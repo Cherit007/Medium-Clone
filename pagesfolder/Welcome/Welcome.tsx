@@ -26,7 +26,6 @@ export default function Welcome({ user }: any) {
       setUserTopics([...userTopics, { ...item, selected: true }]);
     }
     const data = prepareTopicsPayload(userTopics);
-    console.log(data);
     if (data.length < 3) setButtonState(true);
     else setButtonState(false);
   };

@@ -36,6 +36,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
   const pathname = usePathname();
   const [searchList, setSearchList] = useState<any>();
   const [searchValue, setSearchValue] = useState<string>("");
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
 
   const [
     title,
@@ -67,7 +68,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
       setTitle("");
       setDescription("");
       setImg("");
-      router.push("/write-story");
+      window.location.href = "/write-story";
     }
   };
 
@@ -84,13 +85,14 @@ function Navbar({ buttonText, status }: NavbarProps) {
     };
   }, []);
 
-  const debouncedValue = useDebounceInput({ value: searchValue, delay: 500 });
+  const debouncedValue = useDebounceInput({ value: searchValue, delay: 300 });
   useEffect(() => {
     fetchSearchedInput(debouncedValue);
   }, [debouncedValue]);
   const fetchSearchedInput = async (searchValue: string) => {
     try {
       if (searchValue && debouncedValue) {
+        setSearchLoading(true);
         const payload = {
           keyword: debouncedValue,
         };
@@ -102,6 +104,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
             .includes(searchValue.toLocaleLowerCase())
         );
         setSearchList(filteredOutput);
+        setSearchLoading(false);
       } else {
         setSearchList([]);
       }
@@ -119,16 +122,17 @@ function Navbar({ buttonText, status }: NavbarProps) {
     >
       <div className="flex ml-6 items-center">
         <div className="flex items-center">
-          {isSignedIn && (<Link href={"/"} prefetch>
           <Image
+            onClick={() => {
+              window.location.href = "/";
+            }}
             src={"/Logo.jpeg"}
             alt="logo"
             width={80}
             height={80}
-              className="opacity-70 h-13 w-20 mr-3 rounded-full cursor-pointer"
-            />
-          </Link>)}
-          {!isSignedIn && <p className="text-[27px] ml-1 font-bold p-2">MindScribe</p>}
+            className="opacity-70 h-13 w-20 mr-3 rounded-full cursor-pointer"
+          />
+          {!isSignedIn && <p className="text-[30px] font-bold">MindScribe</p>}
         </div>
         {isSignedIn &&
           (!navbarStatus ? (
@@ -143,19 +147,26 @@ function Navbar({ buttonText, status }: NavbarProps) {
                 />
               </div>
               <div className="flex flex-col bg-[#F9F9F9] shadow-black shadow-md max-w-[400px]">
-                {!!searchList &&
-                  searchList.map((item: any, index: number) => {
-                    return (
-                      <Link href={`/article/${index}/${item?.article_id}`} prefetch>
+                {searchList && searchList.length > 0
+                  ? searchList.map((item: any, index: number) => {
+                      return (
                         <p
+                          onClick={() => {
+                            window.location.href = `/article/${index}/${item?.article_id}`;
+                          }}
                           className="text-black bg-red p-3 cursor-pointer rounded-[20px] hover:bg-[#eceaea]"
                           key={index}
                         >
                           {item?.articles}
                         </p>
-                      </Link>
-                    );
-                  })}
+                      );
+                    })
+                  : searchValue &&
+                    !searchLoading && (
+                      <p className="text-black bg-red p-3 cursor-pointer rounded-[20px] hover:bg-[#eceaea]">
+                        No results found
+                      </p>
+                    )}
               </div>
             </div>
           ) : (
@@ -198,31 +209,34 @@ function Navbar({ buttonText, status }: NavbarProps) {
                   My Account
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <Link href={"/me/profile"} prefetch>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <User2 className="w-6 h-6 mr-2 text-[#6B6B6B]" />
-                    Profile
-                  </DropdownMenuItem>
-                </Link>
-                <Link href={"/me/stories"} prefetch>
-                  {" "}
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Scroll className="w-6 h-6 mr-2 text-[#6B6B6B]" />
-                    Stories
-                  </DropdownMenuItem>
-                </Link>
-                <Link href={"/me/settings"} prefetch>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Settings className="w-6 h-6 mr-2 text-[#6B6B6B]" />
-                    Settings
-                  </DropdownMenuItem>
-                </Link>
-                <Link href={"/plans"} prefetch>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Sparkles className="w-6 h-6 mr-2 text-[#6B6B6B]" />
-                    Become a member
-                  </DropdownMenuItem>
-                </Link>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => (window.location.href = "/me/profile")}
+                >
+                  <User2 className="w-6 h-6 mr-2 text-[#6B6B6B]" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => (window.location.href = "/me/stories")}
+                >
+                  <Scroll className="w-6 h-6 mr-2 text-[#6B6B6B]" />
+                  Stories
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => (window.location.href = "/me/settings")}
+                >
+                  <Settings className="w-6 h-6 mr-2 text-[#6B6B6B]" />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => (window.location.href = "/plans")}
+                >
+                  <Sparkles className="w-6 h-6 mr-2 text-[#6B6B6B]" />
+                  Become a member
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => signOut()}
@@ -235,14 +249,13 @@ function Navbar({ buttonText, status }: NavbarProps) {
           </div>
         )}
         {!isSignedIn && (
-          <Link href="/sign-in" prefetch>
-            <Button
-              variant="default"
-              className="bg-black text-white rounded-[20px] hover:bg-black"
-            >
-              Get Started
-            </Button>
-          </Link>
+          <Button
+            variant="default"
+            onClick={() => (window.location.href = "/sign-in")}
+            className="bg-black text-white rounded-[20px] hover:bg-black"
+          >
+            Get Started
+          </Button>
         )}
       </div>
     </nav>

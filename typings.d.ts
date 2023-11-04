@@ -47,6 +47,10 @@ interface ArticleState {
   setRecommendedTags: (recommendedTags) => void;
   recommendedArticles: [];
   setRecommendedArticle: (recommendedTags) => void;
+  audioDataAvailable: any;
+  setAudioDataAvailable: (audioDataAvailable) => void;
+  audioDataLocation: any;
+  setAudioDataLocation: (audioDataLocation) => void;
 }
 
 interface CommentProps {
@@ -75,7 +79,7 @@ interface ArticleProps {
     savedArticles?: string[] | [];
     $id: string;
   };
-  articleRating:number;
+  articleRating: number;
   currentUser?: any;
   subTopics?: string[] | [];
   likes?: any;
