@@ -31,7 +31,7 @@ export const fetchCurrentArticle = async (
           articles?.articleImgUrl
         );
         articles.articleImgUrl = imgs.href;
-      } else articles.articleImgUrl = "";
+      } else if(articles) articles.articleImgUrl = "";
 
       if (articles?.audioUrl) {
         setAudioDataLocation(articles?.audioUrl);

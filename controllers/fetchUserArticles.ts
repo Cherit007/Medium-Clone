@@ -2,7 +2,11 @@ import { decryptText } from "@/lib/encrypt-decrypt";
 
 export const fetchArticles = async (setLoading: any, setUserArticles: any) => {
   setLoading(true);
-  const data = await fetch("http://localhost:3000/api/user/articles", {
+  const url =
+  process.env.NEXT_PROD_MODE === "true"
+    ? process.env.NEXT_PUBLIC_FRONT_END_URL
+    : "http://localhost:3000";
+  const data = await fetch(`${url}/api/user/articles`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
