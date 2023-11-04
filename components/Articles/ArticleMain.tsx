@@ -24,6 +24,7 @@ import { useToast } from "../ui/use-toast";
 import { v4 as uuidv4 } from "uuid";
 import { fetchCurrentArticle } from "@/controllers/fetchCurrentArticle";
 
+
 const styles = {
   wrapper: `flex items-center justify-center flex-[3] ml-[80px] px-10 border-l border-r`,
   content: `h-full w-full p-[2rem]`,
@@ -183,7 +184,7 @@ const ArticleMain = ({ user }: { user: any }) => {
           status: "add",
         };
         await axios.post("/api/text-speech", payload);
-        await storeMp3DataInStorage(`/${currentArticle?.$id}.mp3`);
+        await storeMp3DataInStorage(`/assets/${currentArticle?.$id}.mp3`);
         setAudioEnable(false);
         setShowAudioBar(true);
       } else {

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import fs from "fs";
 import util from "util";
+import path from "path";
 
 export async function POST(req: Request) {
   try {
@@ -21,9 +22,19 @@ export async function POST(req: Request) {
         }
       );
       const file = util.promisify(fs.writeFile);
-      await file(`./public/${payload?.id}.mp3`, res.data, "binary");
+      const folderPath = path.join("./public", "assets");
+      // if (!fs.existsSync(folderPath)) {
+        fs.mkdir(folderPath, { recursive: true }, (err) => {
+          if (err) {
+            console.error(`Error creating folder: ${err}`);
+          } else {
+            console.log(`Folder created successfully`);
+          }
+        });
+      // }
+      await file(`./public/assets/${payload?.id}.mp3`, res.data, "binary");
     } else if (payload?.status === "delete") {
-      fs.unlink(`./public/${payload?.id}.mp3`, (err) => {
+      fs.unlink(`./public/assets/${payload?.id}.mp3`, (err) => {
         if (err) {
           console.error(`Error deleting`);
         } else {
