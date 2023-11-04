@@ -86,12 +86,13 @@ const ArticleMain = ({ user }: { user: any }) => {
   ]);
   const { toast } = useToast();
   const [isMember, setIsMember] = useState(false);
-
-  const [likeCount, setLikeCount] = useState<number>(0);
-  const [likedStatus, setLikedStatus] = useState<boolean>(false);
+  const [likesCount, setLikesCount] = useState<number>(
+    currentArticle?.likes?.length
+  );
   const isLikedArticle = currentArticle?.likes?.find(
     (i: any) => i.userId === user?.$id
   );
+
   useEffect(() => {
     const articleLikesCount = currentArticle?.likes?.filter(
       (i: any) => i.likeStatus === true
@@ -99,9 +100,10 @@ const ArticleMain = ({ user }: { user: any }) => {
     const isLikedArticle = currentArticle?.likes?.find(
       (i: any) => i.userId === user?.$id
     );
-    setLikeCount(articleLikesCount);
-    setLikedStatus(isLikedArticle?.likeStatus);
+    setLikesCount(articleLikesCount);
+    setIsLiked(isLikedArticle)
   }, [currentArticle]);
+
   const callApi = useRef(true);
   const isSavedArticle = savedArticle?.find(
     (i) => i?.$id === (currentArticle?.$id as any)
@@ -110,9 +112,7 @@ const ArticleMain = ({ user }: { user: any }) => {
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [likesCount, setLikesCount] = useState<number>(
-    currentArticle?.likes?.length
-  );
+
   const [loader, setLoader] = useState<boolean>(false);
   const pathname = usePathname();
   const articleId = pathname?.split("/").pop() as string;
@@ -236,15 +236,13 @@ const ArticleMain = ({ user }: { user: any }) => {
     }
   };
   const handleArticleLike = async () => {
-    if(loader) return;
+    if (loader) return;
     let likedArticle;
     setLoader(true);
     if (!isLikedArticle) {
       setLikesCount((prev) => prev + 1);
       setIsLiked(true);
       const uid = uuidv4();
-      setLikeCount((prev) => prev + 1);
-      setLikedStatus(true);
       likedArticle = await database.createDocument(
         "651d2c31d4f6223e24e2",
         "653f86c8df6f233db9e5",

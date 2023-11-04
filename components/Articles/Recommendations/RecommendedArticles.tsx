@@ -30,7 +30,6 @@ function RecommendedArticles({ currentUser }: { currentUser: any }) {
   //   }
   // }, [currentArticle]);
 
-  console.log(recommendedArticles);
 
   return (
     <div className="mt-[80px] h-full flex flex-col w-full items-center flex-1 ">
