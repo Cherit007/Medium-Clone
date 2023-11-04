@@ -10,7 +10,6 @@ function RecommendedArticles({ currentUser }: { currentUser: any }) {
   const [currentArticle, recommendedArticles, loading] = useArticleStore(
     (state) => [state.currentArticle, state.recommendedArticles, state.loading]
   );
-  const callApi = useRef(true);
 
   // useEffect(() => {
   //   try {

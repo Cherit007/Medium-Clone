@@ -28,18 +28,6 @@ export async function POST(req: Request) {
       }
     );
 
-    await database.createDocument(
-      "651d2c31d4f6223e24e2",
-      "653f47c5f252a9caf9f5",
-      payload?.uid,
-      {
-        articleId: payload?.articleId,
-        comment: payload?.comment,
-        articles: payload?.articles,
-        userId: payload?.userId,
-      }
-    );
-
     return NextResponse.json({ data: "Success" });
   } catch (e) {
     console.log("AUTH FAILED", e);

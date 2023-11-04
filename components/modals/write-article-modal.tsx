@@ -105,7 +105,7 @@ export const WriteArticleModal = () => {
     });
     onClose();
     await fetchArticles(setLoading, setUserArticles);
-    router.push("/me/stories");
+    window.location.href = "/me/stories";
   };
   const isLoading = form.formState.isSubmitting;
 
@@ -165,7 +165,7 @@ export const WriteArticleModal = () => {
                     width={400}
                     className="rounded-[20px]"
                   />
-              </div>
+                </div>
               )}
               <Button
                 type="submit"

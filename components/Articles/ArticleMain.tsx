@@ -183,7 +183,7 @@ const ArticleMain = ({ user }: { user: any }) => {
           status: "add",
         };
         await axios.post("/api/text-speech", payload);
-        await storeMp3DataInStorage(`/assets/${currentArticle?.$id}.mp3`);
+        await storeMp3DataInStorage(`/${currentArticle?.$id}.mp3`);
         setAudioEnable(false);
         setShowAudioBar(true);
       } else {

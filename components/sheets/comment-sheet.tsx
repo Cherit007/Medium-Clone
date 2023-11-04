@@ -34,7 +34,7 @@ function CommentSheet() {
     audioDataLocation,
     setAudioDataAvailable,
     setCurrentArticle,
-    setRecommendedArticle
+    setRecommendedArticle,
   ] = useArticleStore((state) => [
     state.isOpen,
     state.onClose,
@@ -46,7 +46,7 @@ function CommentSheet() {
     state.audioDataLocation,
     state.setAudioDataAvailable,
     state.setCurrentArticle,
-    state.setRecommendedArticle
+    state.setRecommendedArticle,
   ]);
 
   const [commentData, setCommentData] = useState<string>("");
@@ -88,7 +88,17 @@ function CommentSheet() {
         userId: data?.userId,
         rating: currentArticle?.articleRating ?? 0,
       };
-      await axios.post("/api/sentiment", payload);
+      await database.createDocument(
+        "651d2c31d4f6223e24e2",
+        "653f47c5f252a9caf9f5",
+        payload?.uid,
+        {
+          articleId: payload?.articleId,
+          comment: payload?.comment,
+          articles: payload?.articles,
+          userId: payload?.userId,
+        }
+      );
       await fetchCurrentArticle(
         callApi,
         setLoading,
@@ -99,6 +109,7 @@ function CommentSheet() {
         setIsMember,
         setRecommendedArticle
       );
+      axios.post("/api/sentiment", payload);
       await fetchComments();
       setCommentData("");
       setLoading(false);
@@ -138,8 +149,14 @@ function CommentSheet() {
 
           <div className="flex flex-col">
             {comments && comments?.length > 0 ? (
-              comments.map((item,index) => {
-                return <ArticleCommentCard item={item} key={index} />;
+              comments.map((item, index) => {
+                return (
+                  <ArticleCommentCard
+                    name={data?.name}
+                    item={item}
+                    key={index}
+                  />
+                );
               })
             ) : (
               <p className="text-center mt-6">No comments</p>

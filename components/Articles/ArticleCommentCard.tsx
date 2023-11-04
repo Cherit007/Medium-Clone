@@ -6,7 +6,9 @@ import { calculateTime } from "@/lib/calculate-time";
 
 function ArticleCommentCard({
   item,
+  name,
 }: {
+  name: string | undefined;
   item: CommentProps | Models.Document;
 }) {
   return (
@@ -15,7 +17,7 @@ function ArticleCommentCard({
         <div className="flex w-full space-x-3">
           <Image alt="user" src={"/Logo.jpeg"} width={50} height={50} />
           <div className="flex flex-col justify-center space-y-1">
-            <p className="text-sm">Cheirt</p>
+            <p className="text-sm">{name}</p>
             <p className="text-sm">{calculateTime(item?.$createdAt)}</p>
           </div>
         </div>

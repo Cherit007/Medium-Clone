@@ -21,9 +21,9 @@ export async function POST(req: Request) {
         }
       );
       const file = util.promisify(fs.writeFile);
-      await file(`./public/assets/${payload?.id}.mp3`, res.data, "binary");
+      await file(`./public/${payload?.id}.mp3`, res.data, "binary");
     } else if (payload?.status === "delete") {
-      fs.unlink(`./public/assets/${payload?.id}.mp3`, (err) => {
+      fs.unlink(`./public/${payload?.id}.mp3`, (err) => {
         if (err) {
           console.error(`Error deleting`);
         } else {
