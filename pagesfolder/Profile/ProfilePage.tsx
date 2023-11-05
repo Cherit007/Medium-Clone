@@ -86,11 +86,11 @@ function userTopicsConversionSelected(userTopicsSelected: any) {
   return topicsSelected;
 }
 
-function ProfilePage({ currentUser }: any) {
+function ProfilePage(props:any) {
   const router = useRouter();
   const [loader, setLoader] = useState(true);
   // Created time
-  const userCreatedTime = createTime(currentUser?.$createdAt);
+  const userCreatedTime = createTime(props.currentUser?.$createdAt);
   // for modal on and off
   const [showModal, setShowModal] = useState(false);
   // retreiving all topics
@@ -98,11 +98,11 @@ function ProfilePage({ currentUser }: any) {
   // converting topics to [{}]
   const options = userTopicsConversion(userTopics);
   // topics selected by user at the time of creation
-  const defaultTopics = userTopicsConversionSelected(currentUser.userTopics);
+  const defaultTopics = userTopicsConversionSelected(props.currentUser.userTopics);
   // topics selected by user now
-  const [selectedTopics, setSelectedTopics] = useState(currentUser.userTopics);
+  const [selectedTopics, setSelectedTopics] = useState(props.currentUser.userTopics);
   // name enetered by user now
-  const [eneteredName, setEnteredName] = useState(currentUser.name);
+  const [eneteredName, setEnteredName] = useState(props.currentUser.name);
 
   const [activeTab, setActiveTab] = React.useState("Stories");
   const data = [
@@ -134,29 +134,34 @@ function ProfilePage({ currentUser }: any) {
     setTimeout(() => {
       setLoader(false);
     }, 10);
-    fetchArticles(setLoading, setUserArticles);
-    setSavedArticle(currentUser?.savedArticles);
-    setEnteredName(currentUser?.name);
-    setSelectedTopics(currentUser?.userTopics);
+    const fetchUserDetails = async () => {
+      await fetchArticles(setLoading, setUserArticles);
+      console.log("sdfyughkjlkjhg");
+      setSavedArticle(props.currentUser?.savedArticles);
+      setEnteredName(props.currentUser?.name);
+      setSelectedTopics(props.currentUser?.userTopics);
+    }
+    fetchUserDetails();
+
   }, []);
 
   function handleClose() {
-    setSelectedTopics(currentUser.userTopics);
-    setEnteredName(currentUser.name);
+    setSelectedTopics(props.currentUser.userTopics);
+    setEnteredName(props.currentUser.name);
     setShowModal(false);
   }
 
   const handleSave = async () => {
     if (
-      eneteredName === currentUser.name &&
-      selectedTopics === currentUser.userTopics
+      eneteredName === props.currentUser.name &&
+      selectedTopics === props.currentUser.userTopics
     ) {
       setShowModal(false);
     } else {
       await database.updateDocument(
         "651d2c31d4f6223e24e2",
         "65219b9e7c62b9078824",
-        currentUser?.$id,
+        props.currentUser?.$id,
         {
           name: eneteredName,
           userTopics: selectedTopics,
@@ -199,7 +204,7 @@ function ProfilePage({ currentUser }: any) {
           <div className="w-full grid grid-cols-1 gap-4 mx-auto pt-10 md:w-1/2 md:grid-cols-3">
             <div className="col-span-2 ml-5 md:m-auto">
               <span className="text-3xl antialiased font-bold">
-                {currentUser.name}
+                {props.currentUser.name}
               </span>
               <span className="rounded-full ml-10 border-black-950 border-solid border-2 p-1 align-[5px] cursor-pointer">
                 <button type="button" onClick={() => setShowModal(true)}>
@@ -208,10 +213,10 @@ function ProfilePage({ currentUser }: any) {
               </span>
               <div className="mt-5">
                 Topics Followed:
-                {currentUser.userTopics.map((item: any, key: any) => {
+                {props.currentUser.userTopics.map((item: any, key: any) => {
                   return (
                     <>
-                      {currentUser.userTopics.length - 1 === key ? (
+                      {props.currentUser.userTopics.length - 1 === key ? (
                         <span> {item}. </span>
                       ) : (
                         <span> {item}, </span>
@@ -234,7 +239,7 @@ function ProfilePage({ currentUser }: any) {
 
             <div className="rounded-full h-48 w-48 p-1 border-t border-b border-black border-opacity-50 border-1 m-auto order-first">
               <img
-                src={currentUser.profile_img_url}
+                src={props.currentUser.profile_img_url}
                 alt="Your Image"
                 className="rounded-full w-full h-full"
               />
@@ -260,7 +265,7 @@ function ProfilePage({ currentUser }: any) {
                       <div className="relative p-6 flex-auto">
                         <div className="rounded-full h-48 w-48 p-1 border-t border-b border-black border-opacity-50 border-1 m-auto order-first">
                           <img
-                            src={currentUser.profile_img_url}
+                            src={props.currentUser.profile_img_url}
                             alt="Your Image"
                             className="rounded-full w-full h-full"
                           />
@@ -318,7 +323,7 @@ function ProfilePage({ currentUser }: any) {
                     "bg-transparent border-b-2 border-gray-900 shadow-none rounded-none",
                 }}
               >
-                {data.map(({ label, value }) => (
+                {data.map(({ label, value}, key) => (
                   <Tab
                     key={value}
                     value={value}
@@ -337,7 +342,7 @@ function ProfilePage({ currentUser }: any) {
                     </p>
                   }
                 >
-                  {data.map(({ value }) => (
+                  {data.map(({ value }, key) => (
                     <TabPanel key={value} value={value}>
                       {value === "Stories" ? (
                         <div>
@@ -348,7 +353,7 @@ function ProfilePage({ currentUser }: any) {
                           ) : (
                             <div className="mt-10">
                               {!!userArticles && userArticles.length > 0 ? (
-                                userArticles.map((item: ArticleProps) => {
+                                userArticles.map((item: ArticleProps, key) => {
                                   return (
                                     <div className="border-b-2 border-gray-100 mb-2">
                                       <ArticleCard
@@ -377,7 +382,7 @@ function ProfilePage({ currentUser }: any) {
                       ) : (
                         <div>
                           {savedArticle && savedArticle.length > 0 ? (
-                            savedArticle.map((item) => {
+                            savedArticle.map((item, key) => {
                               return <ArticleSavedCard item={item} />;
                             })
                           ) : (
