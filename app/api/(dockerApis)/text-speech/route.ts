@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         }
       );
       const file = util.promisify(fs.writeFile);
-      const folderPath = path.join("./public", "assets");
+      const folderPath = path.join("./public", "assets1");
       // if (!fs.existsSync(folderPath)) {
         fs.mkdir(folderPath, { recursive: true }, (err) => {
           if (err) {
@@ -32,9 +32,9 @@ export async function POST(req: Request) {
           }
         });
       // }
-      await file(`./public/assets/${payload?.id}.mp3`, res.data, "binary");
+      await file(`./public/assets1/${payload?.id}.mp3`, res.data, "binary");
     } else if (payload?.status === "delete") {
-      fs.unlink(`./public/assets/${payload?.id}.mp3`, (err) => {
+      fs.unlink(`./public/assets1/${payload?.id}.mp3`, (err) => {
         if (err) {
           console.error(`Error deleting`);
         } else {

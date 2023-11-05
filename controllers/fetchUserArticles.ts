@@ -1,4 +1,3 @@
-import { decryptText } from "@/lib/encrypt-decrypt";
 
 export const fetchArticles = async (setLoading: any, setUserArticles: any) => {
   setLoading(true);

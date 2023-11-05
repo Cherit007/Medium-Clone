@@ -24,7 +24,6 @@ import { useToast } from "../ui/use-toast";
 import { v4 as uuidv4 } from "uuid";
 import { fetchCurrentArticle } from "@/controllers/fetchCurrentArticle";
 
-
 const styles = {
   wrapper: `flex items-center justify-center flex-[3] ml-[80px] px-10 border-l border-r`,
   content: `h-full w-full p-[2rem]`,
@@ -102,7 +101,7 @@ const ArticleMain = ({ user }: { user: any }) => {
       (i: any) => i.userId === user?.$id
     );
     setLikesCount(articleLikesCount);
-    setIsLiked(isLikedArticle)
+    setIsLiked(isLikedArticle);
   }, [currentArticle]);
 
   const callApi = useRef(true);
@@ -141,12 +140,7 @@ const ArticleMain = ({ user }: { user: any }) => {
     fetchData();
   }, []);
 
-  const storeMp3DataInStorage = async (file: any) => {
-    const response = await fetch(file);
-    const blob = await response.blob();
-    const audioFile = new File([blob], `${currentArticle?.$id}.mp3`, {
-      type: "audio/mpeg",
-    });
+  const storeMp3DataInStorage = async (audioFile: any) => {
 
     const audioUrl = await storage.createFile(
       "6522a1f72adc01958f6c",
@@ -184,7 +178,12 @@ const ArticleMain = ({ user }: { user: any }) => {
           status: "add",
         };
         await axios.post("/api/text-speech", payload);
-        await storeMp3DataInStorage(`/assets/${currentArticle?.$id}.mp3`);
+        const file= await fetch(`/assets1/${currentArticle?.$id}.mp3`);
+        const blob = await file.blob();
+        const audioFile = new File([blob], `${currentArticle?.$id}.mp3`, {
+          type: "audio/mpeg",
+        });
+        await storeMp3DataInStorage(audioFile);
         setAudioEnable(false);
         setShowAudioBar(true);
       } else {

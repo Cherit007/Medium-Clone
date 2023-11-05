@@ -55,7 +55,7 @@ function ArticleCard({
     setTitle(title);
     setDescription(description);
     setImg(articleImgUrl);
-    router.push(`/write-story/${$id}/edit`);
+    window.location.href = `/write-story/${$id}/edit`;
   };
 
   const handleSavedArticle = async (

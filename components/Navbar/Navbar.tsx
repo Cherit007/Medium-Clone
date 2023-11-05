@@ -60,7 +60,7 @@ function Navbar({ buttonText, status }: NavbarProps) {
   const isEditMode = pathname?.split("/").pop() === "edit";
 
   const handleWriteArticle = () => {
-    if (!isSignedIn) router.push("/sign-in");
+    if (!isSignedIn) window.location.href = "/sign-in";
     else if (isEditMode) onOpen("editWriteArticle", { title, description });
     else if (pathname === "/write-story") {
       onOpen("writeArticle", { title, description });
@@ -175,24 +175,25 @@ function Navbar({ buttonText, status }: NavbarProps) {
       </div>
       <div className="flex items-center justify-end mr-5 flex-1 gap-5">
         {isSignedIn && (
-        <Button
-          variant="ghost"
-          onClick={handleWriteArticle}
-          disabled={
-            pathname === "/write-story" && (title === "" || titleValidation)
-          }
-          className={
-            navbarStatus
-              ? "bg-[#1A8917] cursor-pointer text-white rounded-full p-2 text-sm hover:bg-[#399c36]"
-              : "cursor-pointer flex text-[#6B6B6B] hover:text-slate-900"
-          }
-        >
-          {isSignedIn && !navbarStatus && (
-            <PenSquare className="w-6 h-6 cursor-pointer mr-2 text-[#6B6B6B]" />
-          )}
-          {buttonText}
-        </Button>)}
-        
+          <Button
+            variant="ghost"
+            onClick={handleWriteArticle}
+            disabled={
+              pathname === "/write-story" && (title === "" || titleValidation)
+            }
+            className={
+              navbarStatus
+                ? "bg-[#1A8917] cursor-pointer text-white rounded-full p-2 text-sm hover:bg-[#399c36]"
+                : "cursor-pointer flex text-[#6B6B6B] hover:text-slate-900"
+            }
+          >
+            {isSignedIn && !navbarStatus && (
+              <PenSquare className="w-6 h-6 cursor-pointer mr-2 text-[#6B6B6B]" />
+            )}
+            {buttonText}
+          </Button>
+        )}
+
         {isSignedIn && !navbarStatus && (
           <Bell className="w-6 h-6 text-[#6B6B6B]" />
         )}

@@ -53,7 +53,7 @@ export default function Welcome({ user }: any) {
       }
     );
 
-    router.push("/");
+    window.location.href = "/";
     setLoading(false);
   };
   return (

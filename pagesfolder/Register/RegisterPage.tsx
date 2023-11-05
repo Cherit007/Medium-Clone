@@ -21,7 +21,7 @@ function RegisterPage({ user }: any) {
       name: name,
     };
     await axios.post("/api/email", payload);
-    router.push("/welcome");
+    window.location.href="/welcome"
     setLoading(false);
   };
 

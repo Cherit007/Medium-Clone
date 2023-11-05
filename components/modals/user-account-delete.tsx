@@ -43,7 +43,7 @@ export default function UserAccountDeleteModal() {
           "65219b9e7c62b9078824",
           $id as string
         );
-        router.push("/");
+        window.location.href="/"
         signOut();
         onClose();
         setLoading(false);

@@ -37,6 +37,7 @@ export const fetchCurrentArticle = async (
         setAudioDataLocation(articles?.audioUrl);
         setAudioDataAvailable(true);
       }
+      else setAudioDataAvailable(false); 
       setCurrentArticle(articles);
       await fetchRecommdedArticles(
         articles?.title,

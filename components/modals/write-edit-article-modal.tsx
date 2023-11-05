@@ -97,7 +97,7 @@ export const WriteEditArticleModal = () => {
     });
     onClose();
     await fetchArticles(setLoading, setUserArticles);
-    router.push("/me/stories");
+    window.location.href = "/me/stories";
   };
   const isLoading = form.formState.isSubmitting;
 
@@ -135,8 +135,12 @@ export const WriteEditArticleModal = () => {
                   <SelectValue className="" placeholder={topic}></SelectValue>
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {topics.map((item:UserTopics,index:number) => (
-                    <SelectItem value={item.topic} key={index} className="cursor-pointer">
+                  {topics.map((item: UserTopics, index: number) => (
+                    <SelectItem
+                      value={item.topic}
+                      key={index}
+                      className="cursor-pointer"
+                    >
                       {item.topic}
                     </SelectItem>
                   ))}
