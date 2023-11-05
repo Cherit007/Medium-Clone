@@ -3,13 +3,18 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function RegisterPage({ user }: any) {
-  const [name, setName] = useState<string>(user?.name);
+  const [name, setName] = useState<string>();
+  const [email, setEmail] = useState<string>();
+
+  useEffect(() => {
+    setName(user?.name);
+    setEmail(user?.email);
+  }, [user]);
+
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   const handleCreateAccount = async () => {
     setLoading(true);
@@ -21,7 +26,7 @@ function RegisterPage({ user }: any) {
       name: name,
     };
     await axios.post("/api/email", payload);
-    window.location.href="/welcome"
+    window.location.href = "/welcome";
     setLoading(false);
   };
 
@@ -40,14 +45,14 @@ function RegisterPage({ user }: any) {
           id="name"
           type="text"
           onChange={(e) => setName(e.target.value)}
-          defaultValue={user?.name}
+          defaultValue={name}
           className="bg-red w-[60%] outline-none border-b-2 pb-3"
           placeholder="Enter your name"
         />
       </div>
       <div className="text-[#6B6B6B] text-center w-full flex flex-col items-center space-y-3">
         <label htmlFor="name">Your email</label>
-        <p className="text-black">{user?.email}</p>
+        <p className="text-black">{email}</p>
       </div>
 
       <Button
