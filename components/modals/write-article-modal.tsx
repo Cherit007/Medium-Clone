@@ -105,7 +105,7 @@ export const WriteArticleModal = () => {
     });
     onClose();
     await fetchArticles(setLoading, setUserArticles);
-    window.location.href = "/me/stories";
+    router.push("/me/stories")
   };
   const isLoading = form.formState.isSubmitting;
 
