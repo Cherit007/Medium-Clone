@@ -48,9 +48,8 @@ export const membershipPrice = 5;
 export const planFeatures: MembershipPlanFeatures[] = [
   {label: "Text to Speech"},
   {label: "Integrated ChatGPT"},
-  {label: "2 team members"},
-  {label: "20GB cloud storage"},
-  {label: "Integration help"},
+  {label: "Summarization of Articles"},
+  {label: "Lifetime access to premium features"},
   {label: "24×7 phone & email support"},
 
 ]
