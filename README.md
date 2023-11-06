@@ -60,7 +60,7 @@ Run the application
 
 ## Demo
 You can watch the demonstration video below
-
+- [Video Link](https://youtu.be/1KZj6wWVdfg)
 
 You can try the app using the below link
 - [CLICK HERE](https://mindscribe-vkau.onrender.com/)
