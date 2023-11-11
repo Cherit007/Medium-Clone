@@ -8,7 +8,6 @@ export const fetchFeedArticles = async () => {
       },
     });
     const response = await data.json();
-    console.log(response, "ddd");
   } catch (e) {
     console.log(e);
   }

@@ -86,23 +86,26 @@ const ArticleMain = ({ user }: { user: any }) => {
   ]);
   const { toast } = useToast();
   const [isMember, setIsMember] = useState(false);
-  const [likesCount, setLikesCount] = useState<number>(
-    currentArticle?.likes?.length
+  let isLikedArticle: any, articleLikesCount: number;
+  articleLikesCount = currentArticle?.likes?.filter(
+    (i: any) => i.likeStatus 
+  ).length;
+  isLikedArticle = currentArticle?.likes?.find(
+    (i: any) => i?.userId === user?.$id && i.likeStatus
   );
-  const isLikedArticle = currentArticle?.likes?.find(
-    (i: any) => i.userId === user?.$id
-  );
+  const [likesCount, setLikesCount] = useState<number>(articleLikesCount);
+  const [isLiked, setIsLiked] = useState<boolean>(isLikedArticle);
 
-  useEffect(() => {
-    const articleLikesCount = currentArticle?.likes?.filter(
-      (i: any) => i.likeStatus === true
-    ).length;
-    const isLikedArticle = currentArticle?.likes?.find(
-      (i: any) => i.userId === user?.$id
-    );
-    setLikesCount(articleLikesCount);
-    setIsLiked(isLikedArticle);
-  }, [currentArticle]);
+    useEffect(()=>{
+      isLikedArticle = currentArticle?.likes?.find(
+        (i: any) => i?.userId === user?.$id && i.likeStatus
+      );
+      articleLikesCount = currentArticle?.likes?.filter(
+        (i: any) => i.likeStatus
+      ).length;
+      setLikesCount(articleLikesCount);
+      setIsLiked(!!isLikedArticle);
+    },[currentArticle])
 
   const callApi = useRef(true);
   const isSavedArticle = savedArticle?.find(
@@ -111,7 +114,6 @@ const ArticleMain = ({ user }: { user: any }) => {
 
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
   const [showAudioBar, setShowAudioBar] = useState<boolean>(false);
-  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const [loader, setLoader] = useState<boolean>(false);
   const pathname = usePathname();
@@ -141,7 +143,6 @@ const ArticleMain = ({ user }: { user: any }) => {
   }, []);
 
   const storeMp3DataInStorage = async (audioFile: any) => {
-
     const audioUrl = await storage.createFile(
       "6522a1f72adc01958f6c",
       ID.unique(),
@@ -178,7 +179,7 @@ const ArticleMain = ({ user }: { user: any }) => {
           status: "add",
         };
         await axios.post("/api/text-speech", payload);
-        const file= await fetch(`/assets1/${currentArticle?.$id}.mp3`);
+        const file = await fetch(`/assets1/${currentArticle?.$id}.mp3`);
         const blob = await file.blob();
         const audioFile = new File([blob], `${currentArticle?.$id}.mp3`, {
           type: "audio/mpeg",

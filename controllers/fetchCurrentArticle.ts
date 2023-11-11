@@ -24,7 +24,6 @@ export const fetchCurrentArticle = async (
     );
     if (res.documents) {
       let articles = res.documents[0];
-      // articles.description = decryptText(articles?.description, "secretKey");
       if (articles?.articleImgUrl) {
         const imgs = storage.getFilePreview(
           "6522a1f72adc01958f6c",
@@ -39,7 +38,7 @@ export const fetchCurrentArticle = async (
       }
       else setAudioDataAvailable(false); 
       setCurrentArticle(articles);
-      await fetchRecommdedArticles(
+      fetchRecommdedArticles(
         articles?.title,
         setRecommendedArticle,
         setLoading

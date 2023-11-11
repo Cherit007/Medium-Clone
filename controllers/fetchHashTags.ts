@@ -16,7 +16,7 @@ export const fetchHashTags = async (
   const { data } = await axios.post("/api/hashtag", payload);
   const hasTags = data?.data?.Tags;
   setRecommendedTags(hasTags);
-  if (currentUser?.subTopics && currentUser?.subTopics.length === 0) {
+  if (!currentUser?.subTopics) {
     database.updateDocument(
       "651d2c31d4f6223e24e2",
       "651d2c5fca0e679e84a7",
